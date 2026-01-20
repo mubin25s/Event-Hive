@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Event-Hive | Unique Registration</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .register-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .register-box {
+            max-width: 900px;
+            width: 100%;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--border-light);
+            border-radius: 2rem;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(64, 224, 208, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Progress Timeline */
+        .progress-timeline {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        
+        .progress-timeline::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--border-light);
+            z-index: 0;
+        }
+        
+        .progress-line {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--teal), var(--purple));
+            transition: width 0.5s ease;
+            z-index: 1;
+        }
+        
+        .step {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-darker);
+            border: 3px solid var(--border-light);
+            margin: 0 auto 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            font-size: 1.2rem;
+        }
+        
+        .step.active .step-circle {
+            background: linear-gradient(135deg, var(--teal), var(--purple));
+            border-color: var(--teal);
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+        
+        .step.completed .step-circle {
+            background: var(--teal);
+            border-color: var(--teal);
+        }
+        
+        .step-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        
+        .step.active .step-label {
+            color: var(--teal);
+        }
+        
+        /* Step Content */
+        .step-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .step-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .step-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .step-header h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--teal), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .step-header p {
+            color: var(--text-muted);
+        }
+        
+        /* Avatar Selection */
+        .avatar-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .avatar-option {
+            aspect-ratio: 1;
+            background: var(--bg-darker);
+            border: 2px solid var(--border-light);
+            border-radius: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 1rem;
+        }
+        
+        .avatar-option:hover {
+            border-color: var(--teal);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(64, 224, 208, 0.2);
+        }
+        
+        .avatar-option.selected {
+            border-color: var(--teal);
+            background: linear-gradient(135deg, rgba(64, 224, 208, 0.1), rgba(139, 92, 246, 0.1));
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+        
+        .avatar-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .avatar-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+        
+        /* Form Inputs */
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-main);
+            font-size: 0.95rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: var(--bg-darker);
+            border: 2px solid var(--border-light);
+            border-radius: 0.75rem;
+            color: var(--text-main);
+            font-size: 1rem;
+            transition: var(--transition);
+            font-family: 'Outfit', sans-serif;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(64, 224, 208, 0.1);
+        }
+        
+        /* Interest Tags */
+        .interest-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+        
+        .interest-tag {
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-darker);
+            border: 2px solid var(--border-light);
+            border-radius: 99px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+        
+        .interest-tag:hover {
+            border-color: var(--teal);
+            transform: translateY(-2px);
+        }
+        
+        .interest-tag.selected {
+            background: linear-gradient(135deg, var(--teal), var(--purple));
+            border-color: transparent;
+            color: white;
+        }
+        
+        /* Navigation Buttons */
+        .step-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            gap: 1rem;
+        }
+        
+        .btn-nav {
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            flex: 1;
+        }
+        
+        .btn-back {
+            background: var(--bg-darker);
+            border: 2px solid var(--border-light);
+            color: var(--text-main);
+        }
+        
+        .btn-back:hover {
+            border-color: var(--teal);
+        }
+        
+        .btn-next {
+            background: linear-gradient(135deg, var(--teal), var(--purple));
+            color: white;
+            box-shadow: 0 4px 15px rgba(64, 224, 208, 0.3);
+        }
+        
+        .btn-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(64, 224, 208, 0.4);
+        }
+        
+        /* Live Activity Feed */
+        .live-activity {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-light);
+            border-radius: 1rem;
+            padding: 1rem 1.5rem;
+            max-width: 300px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .activity-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--teal);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .activity-pulse {
+            width: 8px;
+            height: 8px;
+            background: var(--teal);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        .activity-item {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+        
+        .activity-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* Achievement Badge */
+        .achievement-badge {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            background: linear-gradient(135deg, var(--teal), var(--purple));
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 10px 30px rgba(64, 224, 208, 0.4);
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* Password Strength Meter */
+        .password-strength {
+            height: 4px;
+            background: var(--bg-darker);
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+        
+        .strength-weak { width: 33%; background: #ef4444; }
+        .strength-medium { width: 66%; background: #f59e0b; }
+        .strength-strong { width: 100%; background: var(--teal); }
+        
+        @media (max-width: 768px) {
+            .avatar-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .live-activity {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-box">
+            <!-- Progress Timeline -->
+            <div class="progress-timeline">
+                <div class="progress-line" id="progressLine" style="width: 0%"></div>
+                <div class="step active" data-step="1">
+                    <div class="step-circle"><i class="fa-solid fa-user"></i></div>
+                    <div class="step-label">Profile</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-circle"><i class="fa-solid fa-palette"></i></div>
+                    <div class="step-label">Preferences</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-circle"><i class="fa-solid fa-shield"></i></div>
+                    <div class="step-label">Security</div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-circle"><i class="fa-solid fa-check"></i></div>
+                    <div class="step-label">Complete</div>
+                </div>
+            </div>
+            
+            <!-- Step 1: Profile -->
+            <div class="step-content active" data-step="1">
+                <div class="step-header">
+                    <h2>Create Your Profile</h2>
+                    <p>Choose your avatar and tell us about yourself</p>
+                </div>
+                
+                <div class="avatar-grid" id="avatarGrid">
+                    <div class="avatar-option" data-avatar="organizer">
+                        <div class="avatar-icon">🎯</div>
+                        <div class="avatar-label">Event Organizer</div>
+                    </div>
+                    <div class="avatar-option" data-avatar="vendor">
+                        <div class="avatar-icon">🏪</div>
+                        <div class="avatar-label">Vendor</div>
+                    </div>
+                    <div class="avatar-option" data-avatar="planner">
+                        <div class="avatar-icon">📋</div>
+                        <div class="avatar-label">Planner</div>
+                    </div>
+                    <div class="avatar-option" data-avatar="creative">
+                        <div class="avatar-icon">🎨</div>
+                        <div class="avatar-label">Creative</div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">First Name</label>
+                        <input type="text" class="form-input" id="firstName" placeholder="Enter your first name">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" class="form-input" id="lastName" placeholder="Enter your last name">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input" id="email" placeholder="your.email@example.com">
+                </div>
+            </div>
+            
+            <!-- Step 2: Preferences -->
+            <div class="step-content" data-step="2">
+                <div class="step-header">
+                    <h2>Your Event Interests</h2>
+                    <p>Select the types of events you're interested in</p>
+                </div>
+                
+                <div class="interest-tags" id="interestTags">
+                    <div class="interest-tag" data-interest="weddings">💒 Weddings</div>
+                    <div class="interest-tag" data-interest="corporate">🏢 Corporate Events</div>
+                    <div class="interest-tag" data-interest="birthdays">🎂 Birthdays</div>
+                    <div class="interest-tag" data-interest="conferences">🎤 Conferences</div>
+                    <div class="interest-tag" data-interest="festivals">🎪 Festivals</div>
+                    <div class="interest-tag" data-interest="concerts">🎵 Concerts</div>
+                    <div class="interest-tag" data-interest="sports">⚽ Sports Events</div>
+                    <div class="interest-tag" data-interest="charity">❤️ Charity Events</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Company/Organization (Optional)</label>
+                    <input type="text" class="form-input" id="company" placeholder="Your company name">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Tell us about your event goals</label>
+                    <textarea class="form-input" id="goals" rows="4" placeholder="What kind of events do you want to create or participate in?"></textarea>
+                </div>
+            </div>
+            
+            <!-- Step 3: Security -->
+            <div class="step-content" data-step="3">
+                <div class="step-header">
+                    <h2>Secure Your Account</h2>
+                    <p>Create a strong password to protect your account</p>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" id="password" placeholder="Create a strong password">
+                    <div class="password-strength">
+                        <div class="strength-bar" id="strengthBar"></div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Confirm Password</label>
+                    <input type="password" class="form-input" id="confirmPassword" placeholder="Confirm your password">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Phone Number (for 2FA)</label>
+                    <input type="tel" class="form-input" id="phone" placeholder="+1 (555) 000-0000">
+                </div>
+            </div>
+            
+            <!-- Step 4: Complete -->
+            <div class="step-content" data-step="4">
+                <div class="achievement-badge">🎉</div>
+                <div class="step-header" style="margin-top: 2rem;">
+                    <h2>Welcome to Event-Hive!</h2>
+                    <p>Your account has been created successfully</p>
+                </div>
+                
+                <div style="text-align: center; margin: 2rem 0;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">✨</div>
+                    <p style="color: var(--text-muted); margin-bottom: 2rem;">
+                        You're all set! Start exploring amazing events and venues.
+                    </p>
+                    <button class="btn-next" onclick="window.location.href='dashboard.html'" style="max-width: 300px; margin: 0 auto;">
+                        <i class="fa-solid fa-rocket"></i> Go to Dashboard
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Navigation -->
+            <div class="step-navigation">
+                <button class="btn-nav btn-back" id="btnBack" onclick="previousStep()">
+                    <i class="fa-solid fa-arrow-left"></i> Back
+                </button>
+                <button class="btn-nav btn-next" id="btnNext" onclick="nextStep()">
+                    Next <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Live Activity Feed -->
+    <div class="live-activity" id="liveActivity">
+        <div class="activity-header">
+            <div class="activity-pulse"></div>
+            <span>Live Activity</span>
+        </div>
+        <div class="activity-item">👤 Sarah joined 2 min ago</div>
+        <div class="activity-item">🎉 Michael created an event</div>
+        <div class="activity-item">🏪 Elite Catering registered</div>
+    </div>
+    
+    <script>
+        let currentStep = 1;
+        const totalSteps = 4;
+        let selectedAvatar = null;
+        let selectedInterests = [];
+        
+        // Avatar Selection
+        document.querySelectorAll('.avatar-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedAvatar = this.dataset.avatar;
+            });
+        });
+        
+        // Interest Tags
+        document.querySelectorAll('.interest-tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                this.classList.toggle('selected');
+                const interest = this.dataset.interest;
+                if (selectedInterests.includes(interest)) {
+                    selectedInterests = selectedInterests.filter(i => i !== interest);
+                } else {
+                    selectedInterests.push(interest);
+                }
+            });
+        });
+        
+        // Password Strength
+        document.getElementById('password')?.addEventListener('input', function(e) {
+            const password = e.target.value;
+            const strengthBar = document.getElementById('strengthBar');
+            
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            
+            strengthBar.className = 'strength-bar';
+            if (strength <= 1) strengthBar.classList.add('strength-weak');
+            else if (strength <= 3) strengthBar.classList.add('strength-medium');
+            else strengthBar.classList.add('strength-strong');
+        });
+        
+        function updateProgress() {
+            const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            document.getElementById('progressLine').style.width = progress + '%';
+            
+            // Update steps
+            document.querySelectorAll('.step').forEach((step, index) => {
+                const stepNum = index + 1;
+                step.classList.remove('active', 'completed');
+                if (stepNum < currentStep) step.classList.add('completed');
+                if (stepNum === currentStep) step.classList.add('active');
+            });
+            
+            // Update content
+            document.querySelectorAll('.step-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelector(`.step-content[data-step="${currentStep}"]`).classList.add('active');
+            
+            // Update buttons
+            document.getElementById('btnBack').style.display = currentStep === 1 ? 'none' : 'flex';
+            if (currentStep === totalSteps) {
+                document.getElementById('btnNext').style.display = 'none';
+            } else {
+                document.getElementById('btnNext').style.display = 'flex';
+            }
+        }
+        
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateProgress();
+            }
+        }
+        
+        function previousStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateProgress();
+            }
+        }
+        
+        // Live Activity Animation
+        const activities = [
+            '👤 Alex joined just now',
+            '🎉 Emma created a wedding event',
+            '🏪 Premium Venues registered',
+            '📸 Photo Studio updated profile',
+            '🎵 DJ Services joined',
+            '👤 James signed up'
+        ];
+        
+        let activityIndex = 0;
+        setInterval(() => {
+            const activityItems = document.querySelectorAll('.activity-item');
+            activityIndex = (activityIndex + 1) % activities.length;
+            activityItems[0].textContent = activities[activityIndex];
+        }, 5000);
+        
+        // Initialize
+        updateProgress();
+    </script>
+</body>
+</html>

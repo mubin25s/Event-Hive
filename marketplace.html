@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketplace | Event-Hive</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .filter-bar {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border-light);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .venue-card {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .venue-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .venue-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: 99px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .price-tag {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--success);
+        }
+        .availability-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header id="header" class="scrolled">
+        <div class="container flex justify-between items-center">
+            <div class="logo">
+                <span class="text-gradient"><i class="fa-solid fa-cube"></i> Event-Hive</span>
+            </div>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="marketplace.html" style="color: var(--primary);">Marketplace</a>
+                <a href="dashboard.html">My Events</a>
+                <a href="vendor-dashboard.html">Vendor Portal</a>
+            </nav>
+        </div>
+    </header>
+
+    <div style="padding-top: 6rem; min-height: 100vh;">
+        <div class="container">
+            
+            <!-- Page Header -->
+            <div style="margin-bottom: 3rem;">
+                <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Discover <span class="text-gradient">Perfect Venues</span></h1>
+                <p style="color: var(--text-muted); font-size: 1.1rem;">Browse community centers, resorts, and event spaces with real-time availability</p>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <div class="grid grid-cols-3 gap-4">
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.9rem;">Event Type</label>
+                        <select style="width: 100%; padding: 0.75rem; background: var(--bg-darker); border: 1px solid var(--border-light); border-radius: 0.5rem; color: white;">
+                            <option>All Events</option>
+                            <option>Wedding</option>
+                            <option>Corporate</option>
+                            <option>Birthday Party</option>
+                            <option>Conference</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.9rem;">Budget Range</label>
+                        <select style="width: 100%; padding: 0.75rem; background: var(--bg-darker); border: 1px solid var(--border-light); border-radius: 0.5rem; color: white;">
+                            <option>Any Budget</option>
+                            <option>Under $5,000</option>
+                            <option>$5,000 - $10,000</option>
+                            <option>$10,000 - $25,000</option>
+                            <option>$25,000+</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.9rem;">Date</label>
+                        <input type="date" style="width: 100%; padding: 0.75rem; background: var(--bg-darker); border: 1px solid var(--border-light); border-radius: 0.5rem; color: white;">
+                    </div>
+                </div>
+                <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+                    <button class="btn btn-primary">Search Venues</button>
+                    <button class="btn btn-glass">Reset Filters</button>
+                </div>
+            </div>
+
+            <!-- Venue Categories -->
+            <div style="margin-bottom: 2rem;">
+                <div class="flex gap-2">
+                    <button class="btn btn-primary" style="border-radius: 0.75rem;">All Venues</button>
+                    <button class="btn btn-glass" style="border-radius: 0.75rem;"><i class="fa-solid fa-building"></i> Community Centers</button>
+                    <button class="btn btn-glass" style="border-radius: 0.75rem;"><i class="fa-solid fa-hotel"></i> Resorts</button>
+                    <button class="btn btn-glass" style="border-radius: 0.75rem;"><i class="fa-solid fa-utensils"></i> Catering</button>
+                    <button class="btn btn-glass" style="border-radius: 0.75rem;"><i class="fa-solid fa-camera"></i> Photography</button>
+                </div>
+            </div>
+
+            <!-- Venue Grid -->
+            <div class="grid grid-cols-3 gap-4">
+                
+                <!-- Venue Card 1 - Community Center -->
+                <div class="glass-card venue-card">
+                    <div class="venue-image">
+                        <div class="venue-badge"><i class="fa-solid fa-building"></i> Community Center</div>
+                        <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 1rem; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);">
+                            <span style="font-size: 0.9rem;"><i class="fa-solid fa-users"></i> Capacity: 500</span>
+                        </div>
+                    </div>
+                    <h3 style="margin-bottom: 0.5rem;">Grand Community Hall</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;"><i class="fa-solid fa-location-dot"></i> Downtown, New York</p>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">Included Services:</div>
+                        <div class="flex gap-1" style="flex-wrap: wrap;">
+                            <span style="background: rgba(99, 102, 241, 0.1); color: var(--primary); padding: 0.25rem 0.75rem; border-radius: 99px; font-size: 0.75rem;">Catering</span>
+                            <span style="background: rgba(99, 102, 241, 0.1); color: var(--primary); padding: 0.25rem 0.75rem; border-radius: 99px; font-size: 0.75rem;">Decoration</span>
+                            <span style="background: rgba(99, 102, 241, 0.1); color: var(--primary); padding: 0.25rem 0.75rem; border-radius: 99px; font-size: 0.75rem;">AV Setup</span>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center" style="margin-bottom: 1rem;">
+                        <div class="price-tag">$3,500<span style="font-size: 0.8rem; color: var(--text-muted);">/day</span></div>
+                        <div style="font-size: 0.85rem;"><span class="availability-dot"></span>Available</div>
+                    </div>
+
+                    <button class="btn btn-primary" style="width: 100%;">View Details & Book</button>
+                </div>
+
+                <!-- Venue Card 2 - Resort -->
+                <div class="glass-card venue-card">
+                    <div class="venue-image" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <div class="venue-badge"><i class="fa-solid fa-hotel"></i> Resort</div>
+                        <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 1rem; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);">
+                            <span style="font-size: 0.9rem;"><i class="fa-solid fa-users"></i> Capacity: 300</span>
+                        </div>
+                    </div>
+                    <h3 style="margin-bottom: 0.5rem;">Lakeside Paradise Resort</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;"><i class="fa-solid fa-location-dot"></i> Lake District, CA</p>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">Bring Your Own:</div>
+                        <div class="flex gap-1" style="flex-wrap: wrap;">
+                            <span style="background: rgba(236, 72, 153, 0.1); color: var(--accent); padding: 0.25rem 0.75rem; border-radius: 99px; font-size: 0.75rem;">Catering</span>
+                            <span style="background: rgba(236, 72, 153, 0.1); color: var(--accent); padding: 0.25rem 0.75rem; border-radius: 99px; font-size: 0.75rem;">Decoration</span>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center" style="margin-bottom: 1rem;">
+                        <div class="price-tag">$8,000<span style="font-size: 0.8rem; color: var(--text-muted);">/day</span></div>
+                        <div style="font-size: 0.85rem;"><span class="availability-dot"></span>Available</div>
+                    </div>
+
+                    <button class="btn btn-primary" style="width: 100%;">View Details & Book</button>
+                </div>
+
+                <!-- Venue Card 3 - Community Center -->
+                <div class="glass-card venue-card">
+                    <div class="venue-image" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <div class="venue-badge"><i class="fa-solid fa-building"></i> Community Center</div>
+                        <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 1rem; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);">
+                            <span style="font-size: 0.9rem;"><i class="fa-solid fa-users"></i> Capacity: 200</span>
+                        </div>
+                    </div>
+                    <h3 style="margin-bottom: 0.5rem;">Riverside Event Center</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;"><i class="fa-solid fa-location-dot"></i> Brooklyn, NY</p>
+                    
+                    <div style="margin-bottom: 1rem;">
+                        <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem;">Included Services:</div>
+                        <div class="flex gap-1" style="flex-wrap: wrap;">
+                            <span style="background: rgba(99, 102, 241, 0.1); color: var(--primary); padding: 0.25rem 0.75rem; border-radius: 99px; font-size: 0.75rem;">Full Package</span>
+                            <span style="background: rgba(99, 102, 241, 0.1); color: var(--primary); padding: 0.25rem 0.75rem; border-radius: 99px; font-size: 0.75rem;">Parking</span>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center" style="margin-bottom: 1rem;">
+                        <div class="price-tag">$2,200<span style="font-size: 0.8rem; color: var(--text-muted);">/day</span></div>
+                        <div style="font-size: 0.85rem;"><span class="availability-dot" style="background: var(--warning);"></span>Limited</div>
+                    </div>
+
+                    <button class="btn btn-primary" style="width: 100%;">View Details & Book</button>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

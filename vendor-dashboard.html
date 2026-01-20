@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Dashboard | Event-Hive</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .calendar-day {
+            aspect-ratio: 1;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 0.5rem;
+        }
+        .calendar-day:hover {
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+        .calendar-day.available {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--success);
+        }
+        .calendar-day.booked {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: #ef4444;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .calendar-day.selected {
+            background: rgba(99, 102, 241, 0.2);
+            border-color: var(--primary);
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+        .day-number {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        .day-status {
+            font-size: 0.7rem;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo" style="margin-bottom: 3rem;">
+            <span class="text-gradient"><i class="fa-solid fa-cube"></i> Event-Hive</span>
+        </div>
+        
+        <nav>
+            <a href="#" class="sidebar-link active"><i class="fa-solid fa-grid-2"></i> Dashboard</a>
+            <a href="#" class="sidebar-link"><i class="fa-regular fa-calendar"></i> Availability</a>
+            <a href="#" class="sidebar-link"><i class="fa-solid fa-list"></i> My Services</a>
+            <a href="#" class="sidebar-link"><i class="fa-solid fa-file-invoice-dollar"></i> Bookings</a>
+            <a href="#" class="sidebar-link"><i class="fa-solid fa-star"></i> Reviews</a>
+            <a href="#" class="sidebar-link"><i class="fa-solid fa-chart-line"></i> Analytics</a>
+            <a href="#" class="sidebar-link"><i class="fa-solid fa-gear"></i> Settings</a>
+        </nav>
+
+        <div style="position: absolute; bottom: 2rem; width: calc(100% - 4rem);">
+            <div class="glass-card" style="padding: 1rem;">
+                <div class="flex items-center gap-2">
+                    <div class="avatar">GH</div>
+                    <div>
+                        <div style="font-weight: 600; font-size: 0.9rem;">Grand Hall</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">Vendor Account</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header style="position: sticky; top: 0; background: var(--bg-dark); z-index: 10; padding: 1rem 0; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h2 style="font-size: 1.5rem;">Vendor Dashboard</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Manage your venue availability and bookings</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <button class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add Service</button>
+            </div>
+        </header>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-3 gap-4" style="margin-bottom: 2rem;">
+            <div class="glass-card stat-card">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="metric-value">24</div>
+                        <div class="metric-label">Total Bookings</div>
+                    </div>
+                    <div style="background: rgba(16, 185, 129, 0.2); color: var(--success); padding: 0.5rem; border-radius: 0.5rem;">
+                        <i class="fa-solid fa-calendar-check"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="glass-card stat-card">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="metric-value">$52k</div>
+                        <div class="metric-label">Total Revenue</div>
+                    </div>
+                    <div style="background: rgba(99, 102, 241, 0.2); color: var(--primary); padding: 0.5rem; border-radius: 0.5rem;">
+                        <i class="fa-solid fa-dollar-sign"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card stat-card">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="metric-value">4.8</div>
+                        <div class="metric-label">Average Rating</div>
+                    </div>
+                    <div style="background: rgba(245, 158, 11, 0.2); color: var(--warning); padding: 0.5rem; border-radius: 0.5rem;">
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar Section -->
+        <div class="glass-card" style="margin-bottom: 2rem;">
+            <div class="flex justify-between items-center" style="margin-bottom: 1.5rem;">
+                <div>
+                    <h3>Availability Calendar - January 2026</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">Click on dates to mark as available or booked</p>
+                </div>
+                <div class="flex gap-2">
+                    <button class="btn btn-glass"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button class="btn btn-glass"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+            </div>
+
+            <!-- Calendar Legend -->
+            <div class="flex gap-4" style="margin-bottom: 1rem; font-size: 0.85rem;">
+                <div class="flex items-center gap-1">
+                    <div style="width: 12px; height: 12px; background: rgba(16, 185, 129, 0.3); border: 1px solid var(--success); border-radius: 3px;"></div>
+                    <span>Available</span>
+                </div>
+                <div class="flex items-center gap-1">
+                    <div style="width: 12px; height: 12px; background: rgba(239, 68, 68, 0.3); border: 1px solid #ef4444; border-radius: 3px;"></div>
+                    <span>Booked</span>
+                </div>
+                <div class="flex items-center gap-1">
+                    <div style="width: 12px; height: 12px; background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 3px;"></div>
+                    <span>Unavailable</span>
+                </div>
+            </div>
+
+            <!-- Day Headers -->
+            <div class="calendar-grid" style="margin-bottom: 0.5rem;">
+                <div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">Sun</div>
+                <div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">Mon</div>
+                <div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">Tue</div>
+                <div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">Wed</div>
+                <div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">Thu</div>
+                <div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">Fri</div>
+                <div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">Sat</div>
+            </div>
+
+            <!-- Calendar Days -->
+            <div class="calendar-grid">
+                <!-- Empty cells for alignment -->
+                <div></div><div></div><div></div>
+                
+                <!-- January 1-31 -->
+                <div class="calendar-day available" onclick="toggleDay(this)">
+                    <div class="day-number">1</div>
+                    <div class="day-status" style="color: var(--success);">Available</div>
+                </div>
+                <div class="calendar-day booked">
+                    <div class="day-number">2</div>
+                    <div class="day-status" style="color: #ef4444;">Booked</div>
+                </div>
+                <div class="calendar-day available" onclick="toggleDay(this)">
+                    <div class="day-number">3</div>
+                    <div class="day-status" style="color: var(--success);">Available</div>
+                </div>
+                <div class="calendar-day available selected" onclick="toggleDay(this)">
+                    <div class="day-number">4</div>
+                    <div class="day-status" style="color: var(--primary);">Selected</div>
+                </div>
+                <div class="calendar-day" onclick="toggleDay(this)">
+                    <div class="day-number">5</div>
+                </div>
+                <div class="calendar-day available" onclick="toggleDay(this)">
+                    <div class="day-number">6</div>
+                    <div class="day-status" style="color: var(--success);">Available</div>
+                </div>
+                <div class="calendar-day booked">
+                    <div class="day-number">7</div>
+                    <div class="day-status" style="color: #ef4444;">Booked</div>
+                </div>
+                
+                <!-- Continue pattern for rest of month -->
+                <div class="calendar-day available" onclick="toggleDay(this)"><div class="day-number">8</div></div>
+                <div class="calendar-day" onclick="toggleDay(this)"><div class="day-number">9</div></div>
+                <div class="calendar-day available" onclick="toggleDay(this)"><div class="day-number">10</div></div>
+                <div class="calendar-day booked"><div class="day-number">11</div></div>
+                <div class="calendar-day available" onclick="toggleDay(this)"><div class="day-number">12</div></div>
+                <div class="calendar-day available" onclick="toggleDay(this)"><div class="day-number">13</div></div>
+                <div class="calendar-day booked"><div class="day-number">14</div></div>
+                
+                <div class="calendar-day available" onclick="toggleDay(this)"><div class="day-number">15</div></div>
+                <div class="calendar-day available" onclick="toggleDay(this)"><div class="day-number">16</div></div>
+                <div class="calendar-day" onclick="toggleDay(this)"><div class="day-number">17</div></div>
+                <div class="calendar-day available" onclick="toggleDay(this)"><div class="day-number">18</div></div>
+                <div class="calendar-day booked"><div class="day-number">19</div></div>
+                <div class="calendar-day available" onclick="toggleDay(this)"><div class="day-number">20</div></div>
+                <div class="calendar-day booked"><div class="day-number">21</div></div>
+                
+                <div class="calendar-day available" onclick="toggleDay(this)"><div class="day-number">22</div></div>
+                <div class="calendar-day available" onclick="toggleDay(this)"><div class="day-number">23</div></div>
+                <div class="calendar-day available" onclick="toggleDay(this)"><div class="day-number">24</div></div>
+                <div class="calendar-day booked"><div class="day-number">25</div></div>
+                <div class="calendar-day available" onclick="toggleDay(this)"><div class="day-number">26</div></div>
+                <div class="calendar-day available" onclick="toggleDay(this)"><div class="day-number">27</div></div>
+                <div class="calendar-day booked"><div class="day-number">28</div></div>
+                
+                <div class="calendar-day available" onclick="toggleDay(this)"><div class="day-number">29</div></div>
+                <div class="calendar-day available" onclick="toggleDay(this)"><div class="day-number">30</div></div>
+                <div class="calendar-day available" onclick="toggleDay(this)"><div class="day-number">31</div></div>
+            </div>
+        </div>
+
+        <!-- Recent Bookings -->
+        <div class="glass-card">
+            <h3 style="margin-bottom: 1.5rem;">Recent Bookings</h3>
+            
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--bg-darker); border-radius: 0.75rem;">
+                    <div>
+                        <h4>Corporate Annual Meeting</h4>
+                        <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.25rem;"><i class="fa-regular fa-calendar"></i> Jan 2, 2026 • 200 guests</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 1.2rem; font-weight: 700; color: var(--success);">$3,500</div>
+                        <span style="background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 0.25rem 0.75rem; border-radius: 99px; font-size: 0.75rem;">Confirmed</span>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--bg-darker); border-radius: 0.75rem;">
+                    <div>
+                        <h4>Wedding Reception</h4>
+                        <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.25rem;"><i class="fa-regular fa-calendar"></i> Jan 7, 2026 • 350 guests</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 1.2rem; font-weight: 700; color: var(--success);">$5,200</div>
+                        <span style="background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 0.25rem 0.75rem; border-radius: 99px; font-size: 0.75rem;">Confirmed</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        function toggleDay(element) {
+            if (element.classList.contains('booked')) return; // Can't modify booked days
+            
+            if (element.classList.contains('available')) {
+                element.classList.remove('available');
+                const status = element.querySelector('.day-status');
+                if (status) status.remove();
+            } else {
+                element.classList.add('available');
+                const dayNumber = element.querySelector('.day-number');
+                const status = document.createElement('div');
+                status.className = 'day-status';
+                status.style.color = 'var(--success)';
+                status.textContent = 'Available';
+                element.appendChild(status);
+            }
+        }
+    </script>
+</body>
+</html>

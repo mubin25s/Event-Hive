@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Start Guide | Event-Hive</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 1rem;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+        h2 {
+            color: #333;
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #667eea;
+        }
+        .portal-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .portal-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            text-decoration: none;
+            transition: transform 0.3s;
+            display: block;
+        }
+        .portal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        .portal-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+        .portal-card p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        .feature-list li {
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            border-radius: 0.25rem;
+        }
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0.25rem;
+        }
+        code {
+            background: #f8f9fa;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Event-Hive Quick Start</h1>
+        <p style="color: #666; font-size: 1.1rem; margin-bottom: 2rem;">
+            Welcome to Event-Hive! This guide will help you navigate the platform.
+        </p>
+
+        <h2>📱 Available Portals</h2>
+        <div class="portal-grid">
+            <a href="index.html" class="portal-card">
+                <h3>🏠 Landing Page</h3>
+                <p>Public homepage with platform overview</p>
+            </a>
+            <a href="marketplace.html" class="portal-card">
+                <h3>🏪 Marketplace</h3>
+                <p>Browse and filter venues by budget & date</p>
+            </a>
+            <a href="vendor-dashboard.html" class="portal-card">
+                <h3>🏢 Vendor Portal</h3>
+                <p>Manage availability calendar & bookings</p>
+            </a>
+            <a href="dashboard.html" class="portal-card">
+                <h3>👤 Client Dashboard</h3>
+                <p>Organize events and manage guest lists</p>
+            </a>
+            <a href="guest-view.html" class="portal-card">
+                <h3>👥 Guest View</h3>
+                <p>Event details for attendees (read-only)</p>
+            </a>
+        </div>
+
+        <h2>🎯 Platform Concept</h2>
+        <p style="margin: 1rem 0; line-height: 1.8;">
+            Event-Hive works like <strong>FoodPanda for events</strong>:
+        </p>
+        <ul class="feature-list">
+            <li><strong>Vendors</strong> (community centers, resorts) list their venues and mark availability</li>
+            <li><strong>Clients</strong> browse the marketplace, compare options, and book venues</li>
+            <li><strong>Guests</strong> receive links to view event details (schedule, menu, theme)</li>
+        </ul>
+
+        <h2>🔑 Key Features</h2>
+        
+        <h3 style="margin: 1.5rem 0 0.75rem; color: #667eea;">For Vendors:</h3>
+        <ul class="feature-list">
+            <li>Interactive calendar to mark dates as Available/Booked</li>
+            <li>View bookings and revenue statistics</li>
+            <li>Two vendor types: Community Centers (all-inclusive) & Resorts (venue-only)</li>
+        </ul>
+
+        <h3 style="margin: 1.5rem 0 0.75rem; color: #667eea;">For Clients:</h3>
+        <ul class="feature-list">
+            <li>Filter venues by budget ($5k-$10k, etc.), date, and event type</li>
+            <li>See real-time availability</li>
+            <li>Manage guest lists and share event details</li>
+        </ul>
+
+        <h3 style="margin: 1.5rem 0 0.75rem; color: #667eea;">For Guests:</h3>
+        <ul class="feature-list">
+            <li>View event schedule and timeline</li>
+            <li>See menu options and dietary information</li>
+            <li>RSVP functionality</li>
+        </ul>
+
+        <div class="note">
+            <strong>⚠️ Note:</strong> This is a <strong>frontend prototype</strong> built with HTML, CSS, and JavaScript. 
+            Backend features (authentication, database, payments) are not yet implemented.
+        </div>
+
+        <h2>🎨 Design Highlights</h2>
+        <ul class="feature-list">
+            <li><strong>Glassmorphism</strong>: Modern frosted glass aesthetic with backdrop blur</li>
+            <li><strong>Dark Mode</strong>: Premium deep navy background with vibrant gradients</li>
+            <li><strong>Micro-animations</strong>: Smooth hover effects and entry animations</li>
+            <li><strong>Responsive</strong>: Works on desktop, tablet, and mobile</li>
+        </ul>
+
+        <h2>📂 File Structure</h2>
+        <div style="background: #f8f9fa; padding: 1rem; border-radius: 0.5rem; margin: 1rem 0;">
+            <code>index.html</code> - Landing page<br>
+            <code>marketplace.html</code> - Browse venues<br>
+            <code>vendor-dashboard.html</code> - Vendor portal<br>
+            <code>dashboard.html</code> - Client portal<br>
+            <code>guest-view.html</code> - Guest view<br>
+            <code>style.css</code> - Design system<br>
+            <code>script.js</code> - Interactions<br>
+            <code>README.md</code> - Documentation<br>
+            <code>ARCHITECTURE.md</code> - Detailed architecture
+        </div>
+
+        <h2>🚀 How to Use</h2>
+        <ol style="line-height: 2; margin: 1rem 0;">
+            <li>Open <code>index.html</code> in your browser to start</li>
+            <li>Click "Browse Venues" to see the marketplace</li>
+            <li>Click "Become a Vendor" to see the vendor dashboard</li>
+            <li>Explore the interactive calendar (click dates to toggle availability)</li>
+            <li>Check out the guest view to see what attendees will see</li>
+        </ol>
+
+        <div style="text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 2px solid #eee;">
+            <a href="index.html" class="portal-card" style="display: inline-block; margin: 0 0.5rem;">
+                <h3>🎉 Start Exploring</h3>
+                <p>Go to Landing Page</p>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

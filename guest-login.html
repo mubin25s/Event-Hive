@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guest Access | Event-Hive</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .login-box {
+            max-width: 500px;
+            width: 100%;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(245, 158, 11, 0.3);
+            border-radius: 2rem;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(245, 158, 11, 0.2);
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        
+        .guest-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            padding: 0.5rem 1.5rem;
+            border-radius: 99px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+        
+        .login-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #f59e0b;
+        }
+        
+        .login-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        
+        .guest-info {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .info-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .info-icon {
+            color: #f59e0b;
+            font-size: 1.2rem;
+            margin-top: 0.2rem;
+        }
+        
+        .info-text {
+            flex: 1;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+        
+        .info-text strong {
+            color: var(--text-main);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+            color: var(--text-main);
+            font-size: 1rem;
+            text-align: center;
+        }
+        
+        .code-input-container {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        
+        .code-digit {
+            width: 60px;
+            height: 70px;
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            background: var(--bg-darker);
+            border: 2px solid var(--border-light);
+            border-radius: 0.75rem;
+            color: var(--text-main);
+            transition: var(--transition);
+            font-family: 'Courier New', monospace;
+        }
+        
+        .code-digit:focus {
+            outline: none;
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+            transform: scale(1.05);
+        }
+        
+        .code-hint {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .btn-guest {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+        
+        .btn-guest:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.5);
+        }
+        
+        .btn-guest:active {
+            transform: translateY(0);
+        }
+        
+        .btn-guest:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .back-link {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .back-link a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+        
+        .back-link a:hover {
+            color: #f59e0b;
+        }
+        
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            color: #ef4444;
+            font-size: 0.9rem;
+            display: none;
+            text-align: center;
+        }
+        
+        .error-message.show {
+            display: block;
+            animation: shake 0.5s;
+        }
+        
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            color: #10b981;
+            font-size: 0.9rem;
+            display: none;
+            text-align: center;
+        }
+        
+        .success-message.show {
+            display: block;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        @media (max-width: 640px) {
+            .code-digit {
+                width: 50px;
+                height: 60px;
+                font-size: 1.75rem;
+            }
+            
+            .code-input-container {
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <div class="guest-badge">
+                    <i class="fa-solid fa-ticket"></i> GUEST ACCESS
+                </div>
+                <h1>Guest Login</h1>
+                <p>Enter your unique event code to view event details</p>
+            </div>
+            
+            <div class="guest-info">
+                <div class="info-item">
+                    <i class="fa-solid fa-circle-info info-icon"></i>
+                    <div class="info-text">
+                        <strong>What is a Guest Code?</strong><br>
+                        Your event organizer has provided you with a unique 6-digit code to access event information.
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fa-solid fa-eye info-icon"></i>
+                    <div class="info-text">
+                        <strong>What can you view?</strong><br>
+                        Event schedule, menu, venue details, dress code, and other important information.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="error-message" id="errorMessage">
+                <i class="fa-solid fa-triangle-exclamation"></i> Invalid guest code. Please check and try again.
+            </div>
+            
+            <div class="success-message" id="successMessage">
+                <i class="fa-solid fa-check-circle"></i> Code verified! Redirecting...
+            </div>
+            
+            <form id="guestLoginForm" onsubmit="handleGuestLogin(event)">
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fa-solid fa-key"></i> Enter Your 6-Digit Guest Code
+                    </label>
+                    <div class="code-input-container">
+                        <input type="text" maxlength="1" class="code-digit" id="digit1" oninput="handleCodeInput(event, 1)" onkeydown="handleBackspace(event, 1)" autocomplete="off">
+                        <input type="text" maxlength="1" class="code-digit" id="digit2" oninput="handleCodeInput(event, 2)" onkeydown="handleBackspace(event, 2)" autocomplete="off">
+                        <input type="text" maxlength="1" class="code-digit" id="digit3" oninput="handleCodeInput(event, 3)" onkeydown="handleBackspace(event, 3)" autocomplete="off">
+                        <input type="text" maxlength="1" class="code-digit" id="digit4" oninput="handleCodeInput(event, 4)" onkeydown="handleBackspace(event, 4)" autocomplete="off">
+                        <input type="text" maxlength="1" class="code-digit" id="digit5" oninput="handleCodeInput(event, 5)" onkeydown="handleBackspace(event, 5)" autocomplete="off">
+                        <input type="text" maxlength="1" class="code-digit" id="digit6" oninput="handleCodeInput(event, 6)" onkeydown="handleBackspace(event, 6)" autocomplete="off">
+                    </div>
+                    <div class="code-hint">
+                        <i class="fa-solid fa-lightbulb"></i> Didn't receive a code? Contact your event organizer.
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-guest" id="submitBtn" disabled>
+                    <i class="fa-solid fa-right-to-bracket"></i> Access Event
+                </button>
+            </form>
+            
+            <div class="back-link">
+                <a href="login.html">
+                    <i class="fa-solid fa-arrow-left"></i> Back to Role Selection
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script src="auth.js"></script>
+    <script>
+        // Auto-focus first input on load
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('digit1').focus();
+        });
+        
+        function handleCodeInput(event, position) {
+            const input = event.target;
+            const value = input.value;
+            
+            // Only allow numbers
+            if (!/^\d$/.test(value)) {
+                input.value = '';
+                return;
+            }
+            
+            // Move to next input
+            if (value && position < 6) {
+                document.getElementById(`digit${position + 1}`).focus();
+            }
+            
+            // Check if all digits are filled
+            checkCodeComplete();
+        }
+        
+        function handleBackspace(event, position) {
+            if (event.key === 'Backspace' && !event.target.value && position > 1) {
+                document.getElementById(`digit${position - 1}`).focus();
+            }
+        }
+        
+        function checkCodeComplete() {
+            let allFilled = true;
+            for (let i = 1; i <= 6; i++) {
+                if (!document.getElementById(`digit${i}`).value) {
+                    allFilled = false;
+                    break;
+                }
+            }
+            
+            document.getElementById('submitBtn').disabled = !allFilled;
+        }
+        
+        function getEnteredCode() {
+            let code = '';
+            for (let i = 1; i <= 6; i++) {
+                code += document.getElementById(`digit${i}`).value;
+            }
+            return code;
+        }
+        
+        function clearCode() {
+            for (let i = 1; i <= 6; i++) {
+                document.getElementById(`digit${i}`).value = '';
+            }
+            document.getElementById('digit1').focus();
+            checkCodeComplete();
+        }
+        
+        function handleGuestLogin(event) {
+            event.preventDefault();
+            
+            const code = getEnteredCode();
+            
+            // Demo codes - Replace with actual validation
+            // Each code represents a different event
+            const validCodes = {
+                '123456': { eventId: 'wedding-001', eventName: "Sarah & Michael's Wedding" },
+                '789012': { eventId: 'birthday-002', eventName: "John's 50th Birthday" },
+                '456789': { eventId: 'corporate-003', eventName: "Tech Corp Annual Gala" }
+            };
+            
+            if (validCodes[code]) {
+                // Store guest session
+                sessionStorage.setItem('userRole', 'guest');
+                sessionStorage.setItem('guestCode', code);
+                sessionStorage.setItem('eventId', validCodes[code].eventId);
+                sessionStorage.setItem('eventName', validCodes[code].eventName);
+                
+                // Show success message
+                document.getElementById('successMessage').classList.add('show');
+                
+                // Redirect to guest view
+                setTimeout(() => {
+                    window.location.href = 'guest-view.html';
+                }, 1500);
+            } else {
+                // Show error
+                const errorMsg = document.getElementById('errorMessage');
+                errorMsg.classList.add('show');
+                
+                // Shake animation and clear code
+                setTimeout(() => {
+                    errorMsg.classList.remove('show');
+                    clearCode();
+                }, 2000);
+            }
+        }
+        
+        // Allow paste functionality
+        document.querySelector('.code-input-container').addEventListener('paste', (e) => {
+            e.preventDefault();
+            const pastedData = e.clipboardData.getData('text').trim();
+            
+            if (/^\d{6}$/.test(pastedData)) {
+                for (let i = 0; i < 6; i++) {
+                    document.getElementById(`digit${i + 1}`).value = pastedData[i];
+                }
+                checkCodeComplete();
+            }
+        });
+    </script>
+</body>
+</html>
