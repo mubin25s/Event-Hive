@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sponsor Dashboard | Event-Hive</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { overflow-x: hidden; }
+        .sidebar { background: var(--bg-darker); border-right: 1px solid var(--border-light); }
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 0.75rem;
+            transition: var(--transition);
+            margin-bottom: 0.5rem;
+        }
+        .sidebar-link:hover, .sidebar-link.active {
+            background: var(--bg-card);
+            color: var(--primary);
+        }
+        .sidebar-link i { width: 20px; text-align: center; }
+
+        .stat-card h3 { font-size: 2.5rem; margin-bottom: 0.5rem; color: var(--text-main); }
+        .stat-card p { color: var(--text-muted); }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo" style="margin-bottom: 3rem;">
+            <span class="text-gradient"><i class="fa-solid fa-cube"></i> Event-Hive</span>
+        </div>
+        
+        <nav>
+            <a href="#" class="sidebar-link active"><i class="fa-solid fa-chart-line"></i> ROI Overview</a>
+            <a href="#" class="sidebar-link"><i class="fa-solid fa-bullhorn"></i> Campaigns</a>
+            <a href="#" class="sidebar-link"><i class="fa-solid fa-images"></i> Brand Assets</a>
+            <a href="#" class="sidebar-link"><i class="fa-regular fa-calendar-check"></i> Sponsored Events</a>
+        </nav>
+
+        <div style="position: absolute; bottom: 2rem; width: calc(100% - 4rem);">
+            <div class="glass-card" style="padding: 1rem;">
+                <div class="flex items-center gap-2">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #f97316; display: flex; align-items: center; justify-content: center; font-weight: 700;">TC</div>
+                    <div>
+                        <div style="font-weight: 600; font-size: 0.9rem;">TechCorp Inc.</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">Platinum Sponsor</div>
+                    </div>
+                </div>
+                <div style="margin-top: 1rem; border-top: 1px solid var(--border-light); padding-top: 0.5rem;">
+                    <a href="index.html" style="font-size: 0.8rem; color: #ef4444; text-decoration: none;">Logout</a>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header style="margin-bottom: 2rem;">
+            <h2 style="font-size: 1.5rem;">Sponsorship Performance</h2>
+            <p style="color: var(--text-muted);">Overview for <strong>Tech Summit 2024</strong></p>
+        </header>
+
+        <!-- ROI Stats -->
+        <div class="grid grid-cols-3 gap-4" style="margin-bottom: 2rem;">
+            <div class="glass-card stat-card">
+                <h3>12.5k</h3>
+                <p>Brand Impressions</p>
+                <div style="margin-top: 1rem; font-size: 0.8rem; color: var(--success);"><i class="fa-solid fa-arrow-up"></i> 12% vs last event</div>
+            </div>
+            <div class="glass-card stat-card">
+                <h3>450</h3>
+                <p>Booth Visits</p>
+                <div style="margin-top: 1rem; font-size: 0.8rem; color: var(--success);"><i class="fa-solid fa-arrow-up"></i> 5% vs last event</div>
+            </div>
+            <div class="glass-card stat-card">
+                <h3>$145k</h3>
+                <p>Est. Pipeline Value</p>
+                <div style="margin-top: 1rem; font-size: 0.8rem; color: var(--success);"><i class="fa-solid fa-arrow-up"></i> 22% vs last event</div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+            <!-- Asset Management -->
+            <div class="glass-card">
+                <div class="flex justify-between items-center" style="margin-bottom: 1.5rem;">
+                    <h3>Live Brand Assets</h3>
+                    <button class="btn btn-sm btn-primary">Upload New</button>
+                </div>
+                
+                <div class="flex flex-col gap-3">
+                    <div class="flex items-center justify-between" style="padding: 1rem; background: var(--bg-darker); border-radius: 0.5rem;">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-file-image" style="font-size: 1.5rem; color: var(--primary);"></i>
+                            <div>
+                                <div style="font-weight: 600;">Main Logo_Dark.png</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Used on Stage Screen</div>
+                            </div>
+                        </div>
+                        <span style="color: var(--success); font-size: 0.8rem;">● Active</span>
+                    </div>
+
+                    <div class="flex items-center justify-between" style="padding: 1rem; background: var(--bg-darker); border-radius: 0.5rem;">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-file-video" style="font-size: 1.5rem; color: var(--primary);"></i>
+                            <div>
+                                <div style="font-weight: 600;">Promo_Reel_V2.mp4</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Main Hall Loop</div>
+                            </div>
+                        </div>
+                        <span style="color: var(--success); font-size: 0.8rem;">● Active</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Sponsoring -->
+            <div class="glass-card">
+                 <h3 style="margin-bottom: 1.5rem;">Upcoming Sponsored Events</h3>
+                 <div style="border-left: 2px solid var(--border-light); padding-left: 1.5rem; margin-left: 0.5rem;">
+                     <div style="position: relative; margin-bottom: 2rem;">
+                         <div style="position: absolute; left: -1.95rem; top: 0; width: 12px; height: 12px; background: var(--primary); border-radius: 50%;"></div>
+                         <h4 style="margin-bottom: 0.2rem;">FinTech Global 2024</h4>
+                         <p style="font-size: 0.9rem; color: var(--text-muted);">Nov 12 • London, UK</p>
+                         <div style="margin-top: 0.5rem; display: inline-block; padding: 0.2rem 0.5rem; background: rgba(249, 115, 22, 0.2); color: #f97316; font-size: 0.75rem; border-radius: 4px;">Gold Tier</div>
+                     </div>
+
+                     <div style="position: relative;">
+                         <div style="position: absolute; left: -1.95rem; top: 0; width: 12px; height: 12px; background: var(--border-light); border-radius: 50%;"></div>
+                         <h4 style="margin-bottom: 0.2rem;">Design Weekly Meetup</h4>
+                         <p style="font-size: 0.9rem; color: var(--text-muted);">Dec 05 • New York, USA</p>
+                         <div style="margin-top: 0.5rem; display: inline-block; padding: 0.2rem 0.5rem; background: rgba(255, 255, 255, 0.1); color: var(--text-muted); font-size: 0.75rem; border-radius: 4px;">Standard Tier</div>
+                     </div>
+                 </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

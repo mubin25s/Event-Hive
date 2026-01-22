@@ -282,6 +282,46 @@
              </div>
         </div>
 
+        <!-- 4. Vendor Approval Section (FR011) -->
+        <div id="vendors-section" style="display: none;">
+             <div class="glass-card">
+                 <h3 style="margin-bottom: 1.5rem;">Pending Vendor Approvals</h3>
+                 <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Business Name</th>
+                            <th>Service Type</th>
+                            <th>Applied Date</th>
+                            <th>Status.</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Dreamy Decors</strong></td>
+                            <td>Decoration</td>
+                            <td>Oct 20, 2024</td>
+                            <td><span class="status-badge" style="background: rgba(245, 158, 11, 0.2); color: var(--warning);">Pending</span></td>
+                            <td>
+                                <button class="btn btn-sm" style="background: var(--success); color: var(--bg-dark); border:none; margin-right: 0.5rem;" onclick="this.closest('tr').remove(); alert('Vendor Approved!');">Approve</button>
+                                <button class="btn btn-sm" style="background: transparent; border: 1px solid #ef4444; color: #ef4444;">Reject</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>SoundWave Pro</strong></td>
+                            <td>Audio/Visual</td>
+                            <td>Oct 22, 2024</td>
+                            <td><span class="status-badge" style="background: rgba(245, 158, 11, 0.2); color: var(--warning);">Pending</span></td>
+                            <td>
+                                <button class="btn btn-sm" style="background: var(--success); color: var(--bg-dark); border:none; margin-right: 0.5rem;" onclick="this.closest('tr').remove(); alert('Vendor Approved!');">Approve</button>
+                                <button class="btn btn-sm" style="background: transparent; border: 1px solid #ef4444; color: #ef4444;">Reject</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+             </div>
+        </div>
+
     </main>
 
     <script>
@@ -291,12 +331,14 @@
             document.getElementById('overview-section').style.display = 'none';
             document.getElementById('users-section').style.display = 'none';
             document.getElementById('reports-section').style.display = 'none';
-            // TODO: Add Vendor Section content if needed, for now just reuse or placeholder
+            document.getElementById('vendors-section').style.display = 'none';
 
             // Show selected
             if (sectionId === 'overview') document.getElementById('overview-section').style.display = 'block';
             if (sectionId === 'users') document.getElementById('users-section').style.display = 'block';
             if (sectionId === 'reports') document.getElementById('reports-section').style.display = 'block';
+            if (sectionId === 'vendors') document.getElementById('vendors-section').style.display = 'block';
+            if (sectionId === 'settings') alert('Settings Page Placeholder');
             
             // Update Title
             const titles = {

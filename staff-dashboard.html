@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard | Event-Hive</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { overflow-x: hidden; }
+        .sidebar { background: var(--bg-darker); border-right: 1px solid var(--border-light); }
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 0.75rem;
+            transition: var(--transition);
+            margin-bottom: 0.5rem;
+        }
+        .sidebar-link:hover, .sidebar-link.active {
+            background: var(--bg-card);
+            color: var(--primary);
+        }
+        .sidebar-link i { width: 20px; text-align: center; }
+
+        .task-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .task-card.completed { opacity: 0.6; }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 99px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .status-pending { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .status-done { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo" style="margin-bottom: 3rem;">
+            <span class="text-gradient"><i class="fa-solid fa-cube"></i> Event-Hive</span>
+        </div>
+        
+        <nav>
+            <a href="#" class="sidebar-link active"><i class="fa-solid fa-clipboard-list"></i> My Tasks</a>
+            <a href="#" class="sidebar-link"><i class="fa-regular fa-clock"></i> Schedule / Shifts</a>
+            <a href="#" class="sidebar-link"><i class="fa-solid fa-bullhorn"></i> Announcements</a>
+            <a href="#" class="sidebar-link"><i class="fa-solid fa-user-gear"></i> Profile</a>
+        </nav>
+
+        <div style="position: absolute; bottom: 2rem; width: calc(100% - 4rem);">
+            <div class="glass-card" style="padding: 1rem;">
+                <div class="flex items-center gap-2">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 700;">AW</div>
+                    <div>
+                        <div style="font-weight: 600; font-size: 0.9rem;">Alice Waiter</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">Waitstaff</div>
+                    </div>
+                </div>
+                <div style="margin-top: 1rem; border-top: 1px solid var(--border-light); padding-top: 0.5rem;">
+                    <a href="index.html" style="font-size: 0.8rem; color: #ef4444; text-decoration: none;">Logout</a>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h2 style="font-size: 1.5rem;">Staff Dashboard</h2>
+                <p style="color: var(--text-muted);">Current Shift: <strong>Evening Gala (18:00 - 23:00)</strong></p>
+            </div>
+            <button class="btn btn-primary">Check In</button>
+        </header>
+
+        <div class="grid grid-cols-3 gap-4">
+            <!-- Active Tasks -->
+            <div style="grid-column: span 2;">
+                <h3 style="margin-bottom: 1rem;">Assigned Duties</h3>
+                
+                <div class="task-card">
+                    <div class="flex items-center gap-3">
+                        <input type="checkbox" style="width: 20px; height: 20px; accent-color: var(--primary);">
+                        <div>
+                            <h4 style="margin-bottom: 0.2rem;">Setup Buffet Station B</h4>
+                            <p style="font-size: 0.9rem; color: var(--text-muted);">Ensure all chafing dishes are heated.</p>
+                        </div>
+                    </div>
+                    <span class="status-badge status-pending">Pending</span>
+                </div>
+
+                <div class="task-card">
+                    <div class="flex items-center gap-3">
+                        <input type="checkbox" style="width: 20px; height: 20px; accent-color: var(--primary);">
+                        <div>
+                            <h4 style="margin-bottom: 0.2rem;">Refill Water Jugs - Table 1-5</h4>
+                            <p style="font-size: 0.9rem; color: var(--text-muted);">Check every 30 mins.</p>
+                        </div>
+                    </div>
+                    <span class="status-badge status-pending">In Progress</span>
+                </div>
+
+                <div class="task-card completed">
+                    <div class="flex items-center gap-3">
+                        <input type="checkbox" checked style="width: 20px; height: 20px; accent-color: var(--primary);">
+                        <div>
+                            <h4 style="margin-bottom: 0.2rem; text-decoration: line-through;">Arrange Cutlery</h4>
+                            <p style="font-size: 0.9rem; color: var(--text-muted);">Main dining hall preparation.</p>
+                        </div>
+                    </div>
+                    <span class="status-badge status-done">Completed</span>
+                </div>
+            </div>
+
+            <!-- Notifications / Quick Actions -->
+            <div>
+                <div class="glass-card" style="margin-bottom: 1.5rem;">
+                    <h3 style="margin-bottom: 1rem;">Supervisor Message</h3>
+                    <div style="background: rgba(167, 170, 99, 0.1); padding: 1rem; border-radius: 0.5rem; border-left: 3px solid var(--primary);">
+                        <p style="font-size: 0.9rem; margin-bottom: 0.5rem;">"Team, please ensure the VIP area is spotless before 6 PM."</p>
+                        <small style="color: var(--text-muted);">- John Doe, Manager</small>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <h3 style="margin-bottom: 1rem;">Emergency</h3>
+                    <button class="btn btn-glass" style="width: 100%; border-color: #ef4444; color: #ef4444; margin-bottom: 0.5rem;">Report Incident</button>
+                    <button class="btn btn-glass" style="width: 100%;">Contact Manager</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

@@ -124,7 +124,65 @@
             margin-bottom: 1.5rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            /* ... existing styles ... */
+        
+        /* New Animation Styles */
+        .form-content {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
         }
+
+        .form-content.active {
+            display: block; 
+            /* animation triggered via JS helper class */
+        }
+        
+        .form-content.fade-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Staggered Field Animation */
+        .form-group {
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .form-content.active .form-group {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Delay loop for staggering */
+        .form-content.active .form-group:nth-child(1) { transition-delay: 0.1s; }
+        .form-content.active .form-group:nth-child(2) { transition-delay: 0.15s; }
+        .form-content.active .form-group:nth-child(3) { transition-delay: 0.2s; }
+        .form-content.active .form-group:nth-child(4) { transition-delay: 0.25s; }
+        .form-content.active .form-group:nth-child(5) { transition-delay: 0.3s; }
+        .form-content.active .form-group:nth-child(6) { transition-delay: 0.35s; }
+        .form-content.active .form-group:nth-child(7) { transition-delay: 0.4s; }
+
+        .btn-loading {
+            position: relative;
+            color: transparent !important;
+            pointer-events: none;
+        }
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            left: 50%; top: 50%;
+            width: 20px; height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid var(--bg-darker);
+            border-top-color: var(--text-main);
+            border-radius: 50%;
+            animation: spin 0.8s infinite linear;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
     </style>
 </head>
 <body>
@@ -138,6 +196,7 @@
                 <div class="logo" style="margin-bottom: 1rem;">
                     <span class="text-gradient"><i class="fa-solid fa-cube"></i> Event-Hive</span>
                 </div>
+                <!-- Role Badge -->
                 <div id="role-display" class="role-badge" style="background: rgba(167, 170, 99, 0.15); color: var(--primary);">
                     Portal Access
                 </div>
@@ -149,7 +208,7 @@
             </div>
 
             <!-- Login Form -->
-            <form id="login-form" onsubmit="handleLogin(event)">
+            <form id="login-form" class="form-content active fade-in" onsubmit="handleLogin(event)">
                 <div class="form-group">
                     <label class="form-label">Email Address</label>
                     <input type="email" class="form-input" placeholder="name@example.com" required>
@@ -158,18 +217,18 @@
                     <label class="form-label">Password</label>
                     <input type="password" class="form-input" placeholder="••••••••" required>
                 </div>
-                <div class="flex justify-between items-center" style="margin-bottom: 1.5rem;">
+                <div class="flex justify-between items-center form-group" style="margin-bottom: 1.5rem;">
                     <label class="flex items-center gap-2" style="cursor: pointer;">
                         <input type="checkbox" style="accent-color: var(--primary);">
                         <span style="font-size: 0.85rem; color: var(--text-muted);">Remember me</span>
                     </label>
                     <a href="#" style="font-size: 0.85rem; color: var(--primary); text-decoration: none;">Forgot password?</a>
                 </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
+                <button type="submit" class="btn btn-primary form-group" style="width: 100%;">Sign In</button>
             </form>
 
-            <!-- Register Form (Hidden by default) -->
-            <form id="register-form" style="display: none;" onsubmit="handleRegister(event)">
+            <!-- Register Form -->
+            <form id="register-form" class="form-content" onsubmit="handleRegister(event)">
                 <div class="grid grid-cols-2 gap-2">
                     <div class="form-group">
                         <label class="form-label">First Name</label>
@@ -190,8 +249,8 @@
                 </div>
                 
                 <!-- Vendor Specific Fields (FR009) -->
-                <div id="vendor-fields" style="display: none;">
-                    <div class="form-group">
+                <div id="vendor-fields" class="role-specific-fields form-group" style="display: none;">
+                    <div style="margin-bottom: 1rem;">
                         <label class="form-label">Service Type</label>
                         <select class="form-input">
                             <option>Venue (Community Center)</option>
@@ -202,8 +261,40 @@
                             <option>Sound & Lighting</option>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div>
                         <label class="form-label">Business Name</label>
+                        <input type="text" class="form-input" placeholder="e.g. Elite Catering">
+                    </div>
+                </div>
+
+                <!-- Sponsor Specific Fields (FR013) -->
+                <div id="sponsor-fields" class="role-specific-fields form-group" style="display: none;">
+                    <div style="margin-bottom: 1rem;">
+                        <label class="form-label">Company Name</label>
+                        <input type="text" class="form-input" placeholder="e.g. TechCorp Inc.">
+                    </div>
+                    <div>
+                        <label class="form-label">Sponsorship Intent</label>
+                         <select class="form-input">
+                            <option>Monetary Funding</option>
+                            <option>Product / Service In-Kind</option>
+                            <option>Media Partner</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Attendee Specific Fields (FR015) -->
+                <div id="attendee-fields" class="role-specific-fields form-group" style="display: none;">
+                    <div>
+                         <label class="form-label">Phone Number</label>
+                         <input type="tel" class="form-input" placeholder="+1 (555) 000-0000">
+                    </div>
+                </div>
+
+                <!-- Organizer Specific Fields -->
+                <div id="organizer-fields" class="role-specific-fields form-group" style="display: none;">
+                    <div>
+                        <label class="form-label">Organization / Agency Name (Optional)</label>
                         <input type="text" class="form-input">
                     </div>
                 </div>
@@ -214,11 +305,11 @@
                         <span style="font-size: 0.85rem; color: var(--text-muted);">I agree to the <a href="#" style="color: var(--primary);">Terms of Service</a></span>
                     </label>
                 </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+                <button type="submit" class="btn btn-primary form-group" style="width: 100%;">Create Account</button>
             </form>
             
             <div style="margin-top: 2rem; text-align: center;">
-                <a href="login.html" style="font-size: 0.9rem; color: var(--text-muted); text-decoration: none;">
+                <a href="index.html" style="font-size: 0.9rem; color: var(--text-muted); text-decoration: none;">
                     <i class="fa-solid fa-arrow-left"></i> Change Role
                 </a>
             </div>
@@ -227,72 +318,98 @@
     </div>
 
     <script>
-        // Parse URL params
+        // ... URL Params logic ... (keep existing)
         const urlParams = new URLSearchParams(window.location.search);
-        const role = urlParams.get('role') || 'user'; // default to user
-
-        // UI Updates based on role
+        const role = urlParams.get('role') || 'organizer';
         const roleDisplay = document.getElementById('role-display');
-        const vendorFields = document.getElementById('vendor-fields');
-        
+
         const roleConfig = {
             'admin': { label: 'Administrator', color: '#ef4444', icon: 'fa-shield-halved' },
-            'user': { label: 'Event Organizer', color: '#3b82f6', icon: 'fa-user-tie' },
+            'organizer': { label: 'Event Organizer', color: '#3b82f6', icon: 'fa-user-tie' },
             'vendor': { label: 'Service Vendor', color: '#10b981', icon: 'fa-store' },
-            'guest': { label: 'Event Guest', color: '#f59e0b', icon: 'fa-ticket' }
+            'staff': { label: 'Event Staff', color: '#8b5cf6', icon: 'fa-users-gear' },
+            'sponsor': { label: 'Event Sponsor', color: '#f97316', icon: 'fa-handshake' },
+            'attendee': { label: 'Event Attendee', color: '#f59e0b', icon: 'fa-ticket' }
         };
 
-        const config = roleConfig[role];
+        const config = roleConfig[role] || roleConfig['organizer']; 
         roleDisplay.innerHTML = `<i class="fa-solid ${config.icon}"></i> ${config.label}`;
-        // roleDisplay.style.color = config.color;
-        // roleDisplay.style.background = `${config.color}20`; // 20 hex alpha
+        
+        // Show role specific fields
+        document.querySelectorAll('.role-specific-fields').forEach(el => el.style.display = 'none');
+        if (role === 'vendor') document.getElementById('vendor-fields').style.display = 'block';
+        if (role === 'sponsor') document.getElementById('sponsor-fields').style.display = 'block';
+        if (role === 'attendee') document.getElementById('attendee-fields').style.display = 'block';
+        if (role === 'organizer') document.getElementById('organizer-fields').style.display = 'block';
 
-        if (role === 'vendor') {
-            vendorFields.style.display = 'block';
-        }
-
+        /* ANIMATED TAB SWITCHING */
         function switchTab(tab) {
+            // 1. Update Tab Buttons
             document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-            if (tab === 'login') {
-                document.querySelector('.auth-tab:first-child').classList.add('active');
-                document.getElementById('login-form').style.display = 'block';
-                document.getElementById('register-form').style.display = 'none';
-            } else {
-                document.querySelector('.auth-tab:last-child').classList.add('active');
-                document.getElementById('login-form').style.display = 'none';
-                document.getElementById('register-form').style.display = 'block';
-            }
+            const activeHeaderBtn = (tab === 'login') 
+                ? document.querySelector('.auth-tab:first-child') 
+                : document.querySelector('.auth-tab:last-child');
+            activeHeaderBtn.classList.add('active');
+
+            // 2. Animate Forms
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            
+            // Hide both first (reset)
+            loginForm.classList.remove('fade-in');
+            registerForm.classList.remove('fade-in');
+            
+            // Wait tiny bit for CSS transition to possibly clear, then swap display
+            setTimeout(() => {
+                if (tab === 'login') {
+                    loginForm.classList.add('active');
+                    registerForm.classList.remove('active');
+                    // Trigger reflow/animation
+                    setTimeout(() => loginForm.classList.add('fade-in'), 50);
+                } else {
+                    registerForm.classList.add('active');
+                    loginForm.classList.remove('active');
+                    setTimeout(() => registerForm.classList.add('fade-in'), 50);
+                }
+            }, 300); // Wait for outgoing fade
         }
 
         function handleLogin(e) {
             e.preventDefault();
             const btn = e.target.querySelector('button');
-            const originalText = btn.innerText;
-            btn.innerText = 'Authenticating...';
+            const originalText = btn.innerText; // Store text
+            
+            // Add loading state
+            btn.classList.add('btn-loading');
             btn.disabled = true;
 
             setTimeout(() => {
                 // Redirect based on role
                 if (role === 'admin') window.location.href = 'admin.html';
                 else if (role === 'vendor') window.location.href = 'vendor-dashboard.html';
-                else if (role === 'guest') window.location.href = 'guest-view.html';
+                else if (role === 'attendee') window.location.href = 'guest-view.html';
+                else if (role === 'staff') window.location.href = 'staff-dashboard.html';
+                else if (role === 'sponsor') window.location.href = 'sponsor-dashboard.html';
                 else window.location.href = 'dashboard.html';
-            }, 1000);
+            }, 1500);
         }
 
         function handleRegister(e) {
             e.preventDefault();
             const btn = e.target.querySelector('button');
-            const originalText = btn.innerText;
-            btn.innerText = 'Creating Account...';
+            
+            // Add loading state
+            btn.classList.add('btn-loading');
             btn.disabled = true;
 
             setTimeout(() => {
-                alert('Registration Successful! Please login.');
+                alert('Registration Successful! Redirecting to login...');
                 switchTab('login');
-                btn.innerText = originalText;
+                
+                // Reset button
+                btn.classList.remove('btn-loading');
                 btn.disabled = false;
-            }, 1500);
+            }, 2000);
         }
     </script>
 </body>

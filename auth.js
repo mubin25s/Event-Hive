@@ -8,9 +8,11 @@ const AUTH_CONFIG = {
     SESSION_KEY: 'eventhive_session',
     ROLES: {
         ADMIN: 'admin',
-        CUSTOMER: 'customer',
+        ORGANIZER: 'organizer',
         VENDOR: 'vendor',
-        GUEST: 'guest'
+        STAFF: 'staff',
+        SPONSOR: 'sponsor',
+        ATTENDEE: 'attendee'
     }
 };
 
@@ -25,22 +27,14 @@ const DEMO_USERS = {
         role: 'admin',
         name: 'System Administrator'
     },
-    customers: [
+    organizers: [
         {
             email: 'user@example.com',
             password: 'user123',
-            role: 'customer',
+            role: 'organizer',
             name: 'John Doe',
             customerId: 'CUST001',
             guestCode: '123456' // This customer's unique code for guests
-        },
-        {
-            email: 'sarah@example.com',
-            password: 'sarah123',
-            role: 'customer',
-            name: 'Sarah Johnson',
-            customerId: 'CUST002',
-            guestCode: '789012'
         }
     ],
     vendors: [
@@ -51,14 +45,25 @@ const DEMO_USERS = {
             name: 'Elite Catering Services',
             businessName: 'Elite Catering',
             category: 'Catering'
-        },
+        }
+    ],
+    staff: [
         {
-            vendorId: 'venue001',
-            password: 'venue123',
-            role: 'vendor',
-            name: 'Grand Community Hall',
-            businessName: 'Grand Hall Venues',
-            category: 'Venue'
+            staffId: 'staff001',
+            password: 'staff123',
+            role: 'staff',
+            name: 'Alice Waiter',
+            type: 'Waitstaff',
+            shift: 'Evening'
+        }
+    ],
+    sponsors: [
+        {
+            sponsorId: 'sponsor001',
+            password: 'sponsor123',
+            role: 'sponsor',
+            name: 'TechCorp Inc.',
+            tier: 'Platinum'
         }
     ],
     guestCodes: {
@@ -67,18 +72,6 @@ const DEMO_USERS = {
             eventName: "Sarah & Michael's Wedding",
             customerId: 'CUST001',
             validUntil: '2026-02-15'
-        },
-        '789012': {
-            eventId: 'birthday-002',
-            eventName: "John's 50th Birthday",
-            customerId: 'CUST002',
-            validUntil: '2026-03-20'
-        },
-        '456789': {
-            eventId: 'corporate-003',
-            eventName: "Tech Corp Annual Gala",
-            customerId: 'CUST003',
-            validUntil: '2026-04-10'
         }
     }
 };

@@ -9,133 +9,80 @@
 </head>
 <body>
 
-    <!-- Header -->
-    <header id="header">
-        <div class="container flex justify-between items-center">
-            <div class="logo">
-                <span class="text-gradient"><i class="fa-solid fa-cube"></i> Event-Hive</span>
-            </div>
-            <nav class="nav-links">
-                <a href="#features">Features</a>
-                <a href="marketplace.html">Browse Venues</a>
-                <a href="vendor-dashboard.html">For Vendors</a>
-                <a href="login.html" class="btn btn-primary" style="margin-left: 1rem;">Login</a>
-            </nav>
-        </div>
-    </header>
+    <!-- Splash Screen -->
+    <div id="splash-screen">
+        <i class="fa-solid fa-cube glossy-icon"></i>
+        <h1 class="splash-title">Event-Hive</h1>
+    </div>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="container grid grid-cols-2 gap-4 items-center">
-            <div class="hero-content">
-                <h1>The Future of <br><span class="text-gradient">Event Management</span></h1>
-                <p>Streamline planning, execution, and monitoring with an all-in-one AI-powered platform designed for scale. From corporate summits to social gatherings.</p>
-                <div class="flex gap-2">
-                    <a href="marketplace.html" class="btn btn-primary">Browse Venues <i class="fa-solid fa-arrow-right"></i></a>
-                    <a href="vendor-dashboard.html" class="btn btn-glass">Become a Vendor</a>
-                </div>
+    <!-- Main Entry / Login Selection -->
+    <div class="login-wrapper">
+        <div class="login-header-main">
+            <h1>Welcome to Event-Hive</h1>
+            <p>Identify yourself to access the platform</p>
+        </div>
+
+        <div class="role-grid-enhanced">
+            <!-- Admin Portal -->
+            <div class="role-card-enhanced" onclick="window.location.href='auth.html?role=admin'">
+                <i class="fa-solid fa-shield-halved role-icon-large"></i>
+                <div class="role-title-large">Admin</div>
+                <div class="role-desc-large">System configuration</div>
+            </div>
+
+            <!-- Organizer Portal -->
+            <div class="role-card-enhanced" onclick="window.location.href='auth.html?role=organizer'">
+                <i class="fa-solid fa-user-tie role-icon-large"></i>
+                <div class="role-title-large">Organizer</div>
+                <div class="role-desc-large">Plan & manage events</div>
+            </div>
+
+            <!-- Vendor Portal -->
+            <div class="role-card-enhanced" onclick="window.location.href='auth.html?role=vendor'">
+                <i class="fa-solid fa-store role-icon-large"></i>
+                <div class="role-title-large">Vendor</div>
+                <div class="role-desc-large">Manage services</div>
+            </div>
+
+            <!-- Team Member/Staff Portal -->
+            <div class="role-card-enhanced" onclick="window.location.href='auth.html?role=staff'">
+                <i class="fa-solid fa-users-gear role-icon-large"></i>
+                <div class="role-title-large">Staff & Team</div>
+                <div class="role-desc-large">On-site operations (Waiters, Cooks)</div>
+            </div>
+
+            <!-- Sponsor Portal -->
+            <div class="role-card-enhanced" onclick="window.location.href='auth.html?role=sponsor'">
+                <i class="fa-solid fa-handshake role-icon-large"></i>
+                <div class="role-title-large">Sponsor</div>
+                <div class="role-desc-large">Funding & Branding</div>
+            </div>
+
+            <!-- Attendee Portal -->
+            <div class="role-card-enhanced" onclick="window.location.href='auth.html?role=attendee'">
+                <i class="fa-solid fa-ticket role-icon-large"></i>
+                <div class="role-title-large">Attendee</div>
+                <div class="role-desc-large">Tickets & schedules</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const splash = document.getElementById('splash-screen');
+            const loginWrapper = document.querySelector('.login-wrapper');
+
+            // Wait for 2.5 seconds to show off the glossy logo animation
+            setTimeout(() => {
+                splash.classList.add('hidden');
                 
-                <div class="flex gap-4" style="margin-top: 3rem; opacity: 0.7;">
-                    <div>
-                        <h3 class="text-gradient">500+</h3>
-                        <p style="font-size: 0.9rem; margin:0;">Events Managed</p>
-                    </div>
-                    <div>
-                        <h3 class="text-gradient">10k+</h3>
-                        <p style="font-size: 0.9rem; margin:0;">Active Users</p>
-                    </div>
-                </div>
-            </div>
-            <div class="hero-visual justify-center flex">
-                <!-- Abstract Glass Composition -->
-                <div class="glass-card floating-element" style="width: 100%; max-width: 400px; padding: 2rem; position: relative;">
-                    <div class="flex justify-between items-center" style="margin-bottom: 2rem;">
-                        <h3>Event Overview</h3>
-                        <span style="color: var(--success); font-size: 0.8rem;">● Live Now</span>
-                    </div>
-                    
-                    <div style="background: rgba(255,255,255,0.05); border-radius: 1rem; padding: 1rem; margin-bottom: 1rem;">
-                        <div class="flex justify-between" style="margin-bottom: 0.5rem;">
-                            <span style="color: var(--text-muted); font-size: 0.9rem;">Ticket Sales</span>
-                            <span>$24,500</span>
-                        </div>
-                        <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px;">
-                            <div style="width: 75%; height: 100%; background: var(--success); border-radius: 3px;"></div>
-                        </div>
-                    </div>
-
-                    <div style="background: rgba(255,255,255,0.05); border-radius: 1rem; padding: 1rem;">
-                        <div class="flex justify-between" style="margin-bottom: 0.5rem;">
-                            <span style="color: var(--text-muted); font-size: 0.9rem;">Registrations</span>
-                            <span>1,240 / 1,500</span>
-                        </div>
-                        <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px;">
-                            <div style="width: 82%; height: 100%; background: var(--accent); border-radius: 3px;"></div>
-                        </div>
-                    </div>
-
-                    <!-- Decorative elements -->
-                    <div style="position: absolute; top: -20px; right: -20px; width: 60px; height: 60px; background: var(--primary); filter: blur(40px); opacity: 0.5;"></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section id="features" class="features-section">
-        <div class="container">
-            <div class="section-title">
-                <h2>Comprehensive <span class="text-gradient">Capabilities</span></h2>
-                <p style="color: var(--text-muted);">Everything you need to manage events from inception to analysis.</p>
-            </div>
-
-            <div class="grid grid-cols-3 gap-4">
-                <div class="glass-card">
-                    <div class="feature-icon"><i class="fa-solid fa-layer-group"></i></div>
-                    <h3>Multi-tier Mgmt</h3>
-                    <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.5rem;">
-                        Admin, Vendor, Volunteer, and Attendee specific portals with Role-Based Access Control.
-                    </p>
-                </div>
-                <div class="glass-card">
-                    <div class="feature-icon"><i class="fa-solid fa-chart-pie"></i></div>
-                    <h3>Smart Budgeting</h3>
-                    <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.5rem;">
-                        Track estimated vs actual costs in real-time with automated approval workflows.
-                    </p>
-                </div>
-                <div class="glass-card">
-                    <div class="feature-icon"><i class="fa-regular fa-calendar-check"></i></div>
-                    <h3>Smart Scheduling</h3>
-                    <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.5rem;">
-                        Conflict-free timeline generation and milestone tracking for complex agendas.
-                    </p>
-                </div>
-                <div class="glass-card">
-                    <div class="feature-icon"><i class="fa-solid fa-qrcode"></i></div>
-                    <h3>Digital Check-in</h3>
-                    <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.5rem;">
-                        Secure QR code generation for seamless attendee entry and fraud prevention.
-                    </p>
-                </div>
-                <div class="glass-card">
-                    <div class="feature-icon"><i class="fa-solid fa-bullhorn"></i></div>
-                    <h3>Real-time Alerts</h3>
-                    <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.5rem;">
-                        Instant notifications via Email, SMS, and in-app alerts for critical updates.
-                    </p>
-                </div>
-                <div class="glass-card">
-                    <div class="feature-icon"><i class="fa-solid fa-robot"></i></div>
-                    <h3>AI Analytics</h3>
-                    <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.5rem;">
-                        Post-event reports and predictive insights to optimize future event success.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <script src="script.js"></script>
+                // After fade out transition (0.8s), remove it from flow and show login
+                setTimeout(() => {
+                    splash.style.display = 'none';
+                    loginWrapper.classList.add('visible');
+                }, 800);
+            }, 2500);
+        });
+    </script>
 </body>
 </html>
