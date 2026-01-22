@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Event-Hive</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Local dashboard overrides consistent with dashboard.html */
+        body { overflow-x: hidden; }
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 0.75rem;
+            transition: var(--transition);
+            margin-bottom: 0.5rem;
+        }
+        .sidebar-link:hover, .sidebar-link.active {
+            background: var(--bg-card);
+            color: var(--primary);
+        }
+        .sidebar-link i { width: 20px; text-align: center; }
+
+        .search-bar {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            padding: 0.75rem 1.5rem;
+            border-radius: 99px;
+            color: white;
+            width: 300px;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--warning), var(--accent)); /* Distinct Admin Color */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--bg-dark);
+        }
+
+        .metric-value { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .metric-label { color: var(--text-muted); font-size: 0.9rem; }
+
+        /* Table Styles for User Management */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        .data-table th, .data-table td {
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-muted);
+        }
+        .data-table th {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        .data-table tr:hover td {
+            color: var(--text-main);
+            background: rgba(255,255,255,0.02);
+        }
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 99px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .status-active { background: rgba(167, 170, 99, 0.15); color: var(--success); }
+        .status-blocked { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo" style="margin-bottom: 3rem;">
+            <span class="text-gradient"><i class="fa-solid fa-cube"></i> Event-Hive</span>
+            <span style="font-size: 0.8rem; display: block; color: var(--text-muted); margin-top: 0.2rem;">ADMIN PORTAL</span>
+        </div>
+        
+        <nav>
+            <a href="#" class="sidebar-link active" onclick="showSection('overview')"><i class="fa-solid fa-gauge-high"></i> Overview</a>
+            <a href="#" class="sidebar-link" onclick="showSection('users')"><i class="fa-solid fa-users-gear"></i> User Management</a>
+            <a href="#" class="sidebar-link" onclick="showSection('vendors')"><i class="fa-solid fa-shop"></i> Vendor Approvals</a>
+            <a href="#" class="sidebar-link" onclick="showSection('reports')"><i class="fa-solid fa-file-invoice-dollar"></i> Reports</a>
+            <a href="#" class="sidebar-link" onclick="showSection('settings')"><i class="fa-solid fa-gear"></i> Settings</a>
+            <a href="index.html" class="sidebar-link" style="margin-top: 2rem; color: #ef4444;"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+        </nav>
+
+        <div style="position: absolute; bottom: 2rem; width: calc(100% - 4rem);">
+            <div class="glass-card" style="padding: 1rem;">
+                <div class="flex items-center gap-2">
+                    <div class="avatar">AD</div>
+                    <div>
+                        <div style="font-weight: 600; font-size: 0.9rem;">Admin User</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">Super Admin</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header style="position: sticky; top: 0; background: var(--bg-dark); z-index: 10; padding: 1rem 0; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <div>
+                <h2 style="font-size: 1.5rem;" id="page-title">Admin Dashboard</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Manage users, approve vendors, and generate system reports.</p>
+            </div>
+            <div class="flex items-center gap-2">
+                <input type="text" class="search-bar" placeholder="Search system...">
+                <button class="btn btn-glass" style="border-radius: 50%; width: 45px; height: 45px; padding: 0; display: flex; align-items: center; justify-content: center;">
+                    <i class="fa-solid fa-bell"></i>
+                    <span style="position: absolute; top: 0px; right: 0px; width: 10px; height: 10px; background: red; border-radius: 50%; border: 2px solid var(--bg-dark);"></span>
+                </button>
+            </div>
+        </header>
+
+        <!-- SECTIONS -->
+        
+        <!-- 1. Overview Section -->
+        <div id="overview-section">
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-3 gap-4" style="margin-bottom: 2rem;">
+                <div class="glass-card stat-card">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="metric-value">1,240</div>
+                            <div class="metric-label">Total Users</div>
+                        </div>
+                        <div style="background: rgba(167, 170, 99, 0.15); color: var(--success); padding: 0.5rem; border-radius: 0.5rem;">
+                            <i class="fa-solid fa-user-plus"></i> +12%
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-card stat-card">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="metric-value">58</div>
+                            <div class="metric-label">Pending Vendors</div>
+                        </div>
+                         <div style="background: rgba(245, 158, 11, 0.2); color: var(--warning); padding: 0.5rem; border-radius: 0.5rem;">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Action
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card stat-card">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="metric-value">$850k</div>
+                            <div class="metric-label">Platform Volume</div>
+                        </div>
+                        <div style="background: rgba(99, 102, 241, 0.2); color: #818cf8; padding: 0.5rem; border-radius: 0.5rem;">
+                            <i class="fa-solid fa-chart-pie"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="glass-card">
+                <h3>System Health</h3>
+                <p style="color: var(--text-muted); margin-bottom: 1rem;">Server Status and Database Performance</p>
+                <!-- Fake Graph Bars -->
+                <div class="flex items-end gap-2" style="height: 150px; padding-bottom: 1rem; border-bottom: 1px solid var(--border-light);">
+                    <div style="flex:1; background: var(--primary); opacity: 0.3; height: 40%; border-radius: 4px;"></div>
+                    <div style="flex:1; background: var(--primary); opacity: 0.5; height: 70%; border-radius: 4px;"></div>
+                    <div style="flex:1; background: var(--primary); opacity: 0.8; height: 50%; border-radius: 4px;"></div>
+                    <div style="flex:1; background: var(--primary); opacity: 0.6; height: 90%; border-radius: 4px;"></div>
+                    <div style="flex:1; background: var(--primary); opacity: 0.4; height: 60%; border-radius: 4px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. User Management Section (Hidden by default) -->
+        <div id="users-section" style="display: none;">
+            <div class="glass-card">
+                <div class="flex justify-between items-center" style="margin-bottom: 1.5rem;">
+                    <h3>All Registered Users (FR002)</h3>
+                    <button class="btn btn-primary" onclick="alert('Add User Modal Opening...')"><i class="fa-solid fa-plus"></i> Add User</button>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Name</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#USR-001</td>
+                            <td>Sarah Jenkins</td>
+                            <td>Organizer</td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>
+                                <button class="btn-glass btn-sm" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn-glass btn-sm" title="Block" style="color: #ef4444; border-color: #ef4444;"><i class="fa-solid fa-ban"></i></button>
+                            </td>
+                        </tr>
+                         <tr>
+                            <td>#USR-002</td>
+                            <td>Metro Catering Co.</td>
+                            <td>Vendor</td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                             <td>
+                                <button class="btn-glass btn-sm" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn-glass btn-sm" title="Block" style="color: #ef4444; border-color: #ef4444;"><i class="fa-solid fa-ban"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>#USR-003</td>
+                            <td>Mark Lowery</td>
+                            <td>Attendee</td>
+                            <td><span class="status-badge status-blocked">Blocked</span></td>
+                             <td>
+                                <button class="btn-glass btn-sm" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                                <button class="btn-glass btn-sm" title="Unblock" style="color: var(--success); border-color: var(--success);"><i class="fa-solid fa-check"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 3. Reports Section (Hidden by default) -->
+        <div id="reports-section" style="display: none;">
+             <div class="grid grid-cols-2 gap-4">
+                 <div class="glass-card">
+                     <h3><i class="fa-solid fa-file-pdf"></i> Generate Report (UC-18)</h3>
+                     <p style="color: var(--text-muted); margin-bottom: 1.5rem;">Select criteria to export system data.</p>
+                     
+                     <div class="flex flex-col gap-2" style="margin-bottom: 1.5rem;">
+                         <label style="font-size: 0.9rem; color: var(--text-muted);">Report Type</label>
+                         <select style="background: var(--bg-darker); border: 1px solid var(--border-light); padding: 0.8rem; color: var(--text-main); border-radius: 8px; width: 100%;">
+                             <option>Financial Summary</option>
+                             <option>User Registration Stats</option>
+                             <option>Vendor Performance</option>
+                             <option>Attendee Feedback Analysis</option>
+                         </select>
+                     </div>
+
+                     <div class="flex flex-col gap-2" style="margin-bottom: 1.5rem;">
+                        <label style="font-size: 0.9rem; color: var(--text-muted);">Date Range</label>
+                        <div class="flex gap-2">
+                             <input type="date" style="background: var(--bg-darker); border: 1px solid var(--border-light); padding: 0.8rem; color: var(--text-main); border-radius: 8px; flex: 1;">
+                             <input type="date" style="background: var(--bg-darker); border: 1px solid var(--border-light); padding: 0.8rem; color: var(--text-main); border-radius: 8px; flex: 1;">
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="generateReport()" style="width: 100%;">Download PDF Report</button>
+                 </div>
+
+                 <div class="glass-card">
+                     <h3>Quick Stats</h3>
+                     <div style="margin-top: 1rem; border-left: 2px solid var(--primary); padding-left: 1rem;">
+                         <h4 style="font-size: 0.9rem; color: var(--text-muted);">Last Generated</h4>
+                         <p>Financial_Q3_2025.pdf</p>
+                         <p style="font-size: 0.8rem; opacity: 0.7;">2 hours ago by Admin</p>
+                     </div>
+                 </div>
+             </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Simple client-side routing for the admin panel
+        function showSection(sectionId) {
+            // Hide all sections
+            document.getElementById('overview-section').style.display = 'none';
+            document.getElementById('users-section').style.display = 'none';
+            document.getElementById('reports-section').style.display = 'none';
+            // TODO: Add Vendor Section content if needed, for now just reuse or placeholder
+
+            // Show selected
+            if (sectionId === 'overview') document.getElementById('overview-section').style.display = 'block';
+            if (sectionId === 'users') document.getElementById('users-section').style.display = 'block';
+            if (sectionId === 'reports') document.getElementById('reports-section').style.display = 'block';
+            
+            // Update Title
+            const titles = {
+                'overview': 'Admin Dashboard',
+                'users': 'User Management',
+                'reports': 'System Reports',
+                'vendors': 'Vendor Approvals',
+                'settings': 'Settings'
+            };
+            document.getElementById('page-title').innerText = titles[sectionId] || 'Dashboard';
+            
+            // Update Sidebar Active State
+            document.querySelectorAll('.sidebar-link').forEach(link => link.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        }
+
+        function generateReport() {
+            // UC-18 Simulation
+            const btn = document.querySelector('#reports-section .btn-primary');
+            const originalText = btn.innerText;
+            btn.innerText = "Generating...";
+            btn.disabled = true;
+
+            setTimeout(() => {
+                alert("Report Generated Successfully! (Simulated Download of report.pdf)");
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

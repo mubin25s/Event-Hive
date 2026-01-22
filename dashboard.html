@@ -65,8 +65,8 @@
             <a href="#" class="sidebar-link"><i class="fa-solid fa-users"></i> Guest Lists</a>
             <a href="#" class="sidebar-link"><i class="fa-solid fa-wallet"></i> Budget Tracker</a>
             <a href="#" class="sidebar-link"><i class="fa-solid fa-list-check"></i> Tasks</a>
+            <a href="#reports" class="sidebar-link" onclick="window.alert('Opening Report Wizard (UC-18)...')"><i class="fa-solid fa-file-invoice"></i> Reports</a>
             <a href="guest-view.html" class="sidebar-link"><i class="fa-solid fa-eye"></i> Preview Guest View</a>
-            <a href="#" class="sidebar-link"><i class="fa-solid fa-chart-line"></i> Analytics</a>
         </nav>
 
         <div style="position: absolute; bottom: 2rem; width: calc(100% - 4rem);">
@@ -77,6 +77,9 @@
                         <div style="font-weight: 600; font-size: 0.9rem;">John Doe</div>
                         <div style="font-size: 0.8rem; color: var(--text-muted);">Event Manager</div>
                     </div>
+                </div>
+                <div style="margin-top: 1rem; border-top: 1px solid var(--border-light); padding-top: 0.5rem;">
+                    <a href="index.html" style="font-size: 0.8rem; color: #ef4444; text-decoration: none;">Logout (UC-19)</a>
                 </div>
             </div>
         </div>
@@ -91,7 +94,10 @@
                 <p style="color: var(--text-muted); font-size: 0.9rem;">Welcome back, here's what's happening today.</p>
             </div>
             <div class="flex items-center gap-2">
-                <input type="text" class="search-bar" placeholder="Search events, tasks...">
+                <button class="btn btn-primary" onclick="document.getElementById('createEventModal').style.display='flex'"><i class="fa-solid fa-plus"></i> Create Event</button>
+                <div class="search-bar-wrapper" style="position: relative;">
+                     <input type="text" class="search-bar" placeholder="Search events, tasks...">
+                </div>
                 <button class="btn btn-glass" style="border-radius: 50%; width: 45px; height: 45px; padding: 0; display: flex; align-items: center; justify-content: center;">
                     <i class="fa-regular fa-bell"></i>
                 </button>
@@ -151,7 +157,7 @@
 
                 <div class="flex flex-col gap-2">
                     <!-- Event Item -->
-                    <div style="display: flex; gap: 1rem; padding: 1rem; border-bottom: 1px solid var(--border-light); align-items: center;">
+                    <div style="display: flex; gap: 1rem; padding: 1rem; border-bottom: 1px solid var(--border-light); align-items: center; cursor: pointer; transition: background 0.2s;" onclick="window.location.href='event-details.html'">
                         <div style="background: var(--bg-darker); padding: 0.8rem; border-radius: 0.75rem; text-align: center; min-width: 60px;">
                             <div style="font-size: 0.8rem; color: var(--accent); font-weight: 700;">OCT</div>
                             <div style="font-size: 1.2rem; font-weight: 700;">24</div>
@@ -160,7 +166,7 @@
                             <h4 style="margin-bottom: 0.2rem;">Tech Summit 2024</h4>
                             <p style="font-size: 0.9rem; color: var(--text-muted);"><i class="fa-solid fa-location-dot"></i> Convention Center, NY</p>
                         </div>
-                        <span style="background: rgba(99, 102, 241, 0.1); color: var(--primary); padding: 0.25rem 0.75rem; border-radius: 99px; font-size: 0.8rem;">Corporate</span>
+                        <button class="btn btn-sm btn-glass">Manage</button>
                     </div>
 
                     <!-- Event Item -->
@@ -173,7 +179,7 @@
                             <h4 style="margin-bottom: 0.2rem;">Charity Gala Dinner</h4>
                             <p style="font-size: 0.9rem; color: var(--text-muted);"><i class="fa-solid fa-location-dot"></i> Grand Hotel, London</p>
                         </div>
-                        <span style="background: rgba(236, 72, 153, 0.1); color: var(--accent); padding: 0.25rem 0.75rem; border-radius: 99px; font-size: 0.8rem;">Social</span>
+                         <button class="btn btn-sm btn-glass">Manage</button>
                     </div>
                 </div>
             </div>
@@ -202,6 +208,53 @@
             </div>
          </div>
     </main>
+
+    <!-- Create Event Modal (FR003) -->
+    <div id="createEventModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(5px);">
+        <div class="glass-card" style="width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto;">
+            <div class="flex justify-between items-center" style="margin-bottom: 1.5rem;">
+                <h3>Create New Event</h3>
+                <button onclick="document.getElementById('createEventModal').style.display='none'" style="background: none; border: none; color: white; cursor: pointer; font-size: 1.2rem;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <form id="createEventForm">
+                <style>.form-group{margin-bottom:1rem;} .form-label{display:block;margin-bottom:0.5rem;font-size:0.9rem;color:var(--text-muted);} .form-input{width:100%;padding:0.8rem;background:var(--bg-darker);border:1px solid var(--border-light);border-radius:0.5rem;color:white;}</style>
+                
+                <div class="form-group">
+                    <label class="form-label">Event Title</label>
+                    <input type="text" class="form-input" placeholder="e.g. Annual Tech Summit" required>
+                </div>
+                 <div class="form-group">
+                    <label class="form-label">Event Type</label>
+                    <select class="form-input">
+                        <option>Conference</option>
+                        <option>Wedding</option>
+                        <option>Social</option>
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                     <div class="form-group">
+                        <label class="form-label">Date</label>
+                        <input type="date" class="form-input" required>
+                    </div>
+                     <div class="form-group">
+                        <label class="form-label">Time</label>
+                        <input type="time" class="form-input" required>
+                    </div>
+                </div>
+                 <div class="form-group">
+                    <label class="form-label">Venue Location</label>
+                    <input type="text" class="form-input" placeholder="Search venues or enter address" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Estimated Budget ($)</label>
+                    <input type="number" class="form-input" placeholder="0.00">
+                </div>
+                
+                <button type="button" class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="alert('Event Created Successfully! (FR003)'); document.getElementById('createEventModal').style.display='none';">Create Event</button>
+            </form>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>

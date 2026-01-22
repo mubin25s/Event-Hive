@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication | Event-Hive</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated Background Elements */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            opacity: 0.4;
+        }
+        .orb-1 {
+            top: -10%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            background: var(--primary);
+        }
+        .orb-2 {
+            bottom: -10%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: var(--accent);
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 450px;
+            background: rgba(24, 34, 35, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-light);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 1rem;
+        }
+
+        .auth-tab {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .auth-tab.active {
+            color: var(--text-main);
+        }
+
+        .auth-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -17px; /* Align with border-bottom of container */
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: var(--bg-darker);
+            border: 1px solid var(--border-light);
+            border-radius: 0.5rem;
+            color: var(--text-main);
+            font-family: inherit;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(167, 170, 99, 0.1);
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 99px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+
+        <div class="auth-card">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <div class="logo" style="margin-bottom: 1rem;">
+                    <span class="text-gradient"><i class="fa-solid fa-cube"></i> Event-Hive</span>
+                </div>
+                <div id="role-display" class="role-badge" style="background: rgba(167, 170, 99, 0.15); color: var(--primary);">
+                    Portal Access
+                </div>
+            </div>
+
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchTab('login')">Login</button>
+                <button class="auth-tab" onclick="switchTab('register')">Register</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input" placeholder="name@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" placeholder="••••••••" required>
+                </div>
+                <div class="flex justify-between items-center" style="margin-bottom: 1.5rem;">
+                    <label class="flex items-center gap-2" style="cursor: pointer;">
+                        <input type="checkbox" style="accent-color: var(--primary);">
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">Remember me</span>
+                    </label>
+                    <a href="#" style="font-size: 0.85rem; color: var(--primary); text-decoration: none;">Forgot password?</a>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
+            </form>
+
+            <!-- Register Form (Hidden by default) -->
+            <form id="register-form" style="display: none;" onsubmit="handleRegister(event)">
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="form-group">
+                        <label class="form-label">First Name</label>
+                        <input type="text" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Last Name</label>
+                        <input type="text" class="form-input" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" required>
+                </div>
+                
+                <!-- Vendor Specific Fields (FR009) -->
+                <div id="vendor-fields" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label">Service Type</label>
+                        <select class="form-input">
+                            <option>Venue (Community Center)</option>
+                            <option>Venue (Resort)</option>
+                            <option>Catering</option>
+                            <option>Decoration</option>
+                            <option>Photography/Videography</option>
+                            <option>Sound & Lighting</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Business Name</label>
+                        <input type="text" class="form-input">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="flex items-center gap-2" style="cursor: pointer;">
+                        <input type="checkbox" required style="accent-color: var(--primary);">
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">I agree to the <a href="#" style="color: var(--primary);">Terms of Service</a></span>
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+            </form>
+            
+            <div style="margin-top: 2rem; text-align: center;">
+                <a href="login.html" style="font-size: 0.9rem; color: var(--text-muted); text-decoration: none;">
+                    <i class="fa-solid fa-arrow-left"></i> Change Role
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Parse URL params
+        const urlParams = new URLSearchParams(window.location.search);
+        const role = urlParams.get('role') || 'user'; // default to user
+
+        // UI Updates based on role
+        const roleDisplay = document.getElementById('role-display');
+        const vendorFields = document.getElementById('vendor-fields');
+        
+        const roleConfig = {
+            'admin': { label: 'Administrator', color: '#ef4444', icon: 'fa-shield-halved' },
+            'user': { label: 'Event Organizer', color: '#3b82f6', icon: 'fa-user-tie' },
+            'vendor': { label: 'Service Vendor', color: '#10b981', icon: 'fa-store' },
+            'guest': { label: 'Event Guest', color: '#f59e0b', icon: 'fa-ticket' }
+        };
+
+        const config = roleConfig[role];
+        roleDisplay.innerHTML = `<i class="fa-solid ${config.icon}"></i> ${config.label}`;
+        // roleDisplay.style.color = config.color;
+        // roleDisplay.style.background = `${config.color}20`; // 20 hex alpha
+
+        if (role === 'vendor') {
+            vendorFields.style.display = 'block';
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            if (tab === 'login') {
+                document.querySelector('.auth-tab:first-child').classList.add('active');
+                document.getElementById('login-form').style.display = 'block';
+                document.getElementById('register-form').style.display = 'none';
+            } else {
+                document.querySelector('.auth-tab:last-child').classList.add('active');
+                document.getElementById('login-form').style.display = 'none';
+                document.getElementById('register-form').style.display = 'block';
+            }
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerText;
+            btn.innerText = 'Authenticating...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                // Redirect based on role
+                if (role === 'admin') window.location.href = 'admin.html';
+                else if (role === 'vendor') window.location.href = 'vendor-dashboard.html';
+                else if (role === 'guest') window.location.href = 'guest-view.html';
+                else window.location.href = 'dashboard.html';
+            }, 1000);
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerText;
+            btn.innerText = 'Creating Account...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                alert('Registration Successful! Please login.');
+                switchTab('login');
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

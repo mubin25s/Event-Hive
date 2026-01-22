@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Event: Tech Summit 2024 | Event-Hive</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Specific Styles for Management Console */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-light);
+            transition: var(--transition);
+        }
+        .task-item:hover {
+            background: rgba(255,255,255,0.02);
+        }
+
+        .budget-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px dashed var(--border-light);
+        }
+
+        .tab-nav {
+            display: flex;
+            gap: 2rem;
+            border-bottom: 1px solid var(--border-light);
+            margin-bottom: 2rem;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 1rem 0;
+            font-size: 1rem;
+            cursor: pointer;
+            position: relative;
+        }
+        .tab-btn.active { color: var(--text-main); font-weight: 600; }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo" style="margin-bottom: 3rem;">
+            <span class="text-gradient"><i class="fa-solid fa-cube"></i> Event-Hive</span>
+        </div>
+        
+        <nav>
+            <a href="dashboard.html" class="sidebar-link"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
+            <hr style="border: 0; border-top: 1px solid var(--border-light); margin: 1rem 0;">
+            <a href="#" class="sidebar-link active"><i class="fa-solid fa-sliders"></i> Event Overview</a>
+            <a href="#" class="sidebar-link"><i class="fa-solid fa-users-gear"></i> Team & Tasks</a>
+            <a href="#" class="sidebar-link"><i class="fa-solid fa-wallet"></i> Budget</a>
+            <a href="#" class="sidebar-link"><i class="fa-solid fa-store"></i> Vendors</a>
+            <a href="#" class="sidebar-link"><i class="fa-solid fa-users"></i> Guests</a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Event Header -->
+        <header style="margin-bottom: 2rem;">
+            <div class="flex justify-between items-start">
+                <div>
+                    <span style="background: rgba(99, 102, 241, 0.1); color: var(--primary); padding: 0.25rem 0.75rem; border-radius: 99px; font-size: 0.8rem; margin-bottom: 0.5rem; display: inline-block;">Corporate Alert</span>
+                    <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Tech Summit 2024</h1>
+                    <p style="color: var(--text-muted);"><i class="fa-regular fa-calendar"></i> Oct 24, 2026 • <i class="fa-solid fa-location-dot"></i> Convention Center, NY</p>
+                </div>
+                <div class="flex gap-2">
+                    <button class="btn btn-glass" onclick="window.location.href='guest-view.html'"><i class="fa-solid fa-eye"></i> Guest View</button>
+                    <!-- UC-19 Event Closure -->
+                    <button class="btn btn-primary" style="background: #ef4444; color: white;" onclick="closeEvent()"><i class="fa-solid fa-lock"></i> Close Event</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Tabs -->
+        <div class="tab-nav">
+            <button class="tab-btn active">Overview</button>
+            <button class="tab-btn">Budget Planning (FR012)</button>
+            <button class="tab-btn">Task Board (FR006)</button>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4">
+            
+            <!-- Left Col: Progress & Tasks -->
+            <div class="flex flex-col gap-4" style="grid-column: span 2;">
+                
+                <!-- Progress -->
+                <div class="glass-card">
+                    <div class="flex justify-between items-center" style="margin-bottom: 0.5rem;">
+                        <h3>Event Readiness</h3>
+                        <span style="color: var(--success); font-weight: 600;">68%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 68%;"></div>
+                    </div>
+                </div>
+
+                <!-- Tasks (FR006) -->
+                <div class="glass-card">
+                    <div class="flex justify-between items-center" style="margin-bottom: 1.5rem;">
+                        <h3>Active Tasks</h3>
+                        <button class="btn btn-glass" style="padding: 0.25rem 0.75rem; font-size: 0.8rem;"><i class="fa-solid fa-plus"></i> Assign Task</button>
+                    </div>
+
+                    <div class="task-item">
+                        <div class="flex items-center gap-3">
+                            <input type="checkbox" style="accent-color: var(--primary);">
+                            <div>
+                                <div style="font-weight: 500;">Finalize Lighting Setup</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Assigned to: <span style="color: var(--primary);">John (Tech)</span> • Due Tomorrow</div>
+                            </div>
+                        </div>
+                        <span class="status-badge" style="background: rgba(245, 158, 11, 0.1); color: var(--warning); padding: 0.2rem 0.6rem; border-radius: 99px; font-size: 0.7rem;">In Progress</span>
+                    </div>
+
+                    <div class="task-item">
+                        <div class="flex items-center gap-3">
+                            <input type="checkbox" style="accent-color: var(--primary);" checked>
+                            <div>
+                                <div style="font-weight: 500; text-decoration: line-through; color: var(--text-muted);">Confirm Keynote Speaker</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">Assigned to: <span style="color: var(--primary);">Sarah (PR)</span></div>
+                            </div>
+                        </div>
+                        <span class="status-badge" style="background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 0.2rem 0.6rem; border-radius: 99px; font-size: 0.7rem;">Completed</span>
+                    </div>
+                </div>
+
+                <!-- Vendors (FR010) -->
+                <div class="glass-card">
+                     <div class="flex justify-between items-center" style="margin-bottom: 1.5rem;">
+                        <h3>Booked Services</h3>
+                        <button class="btn btn-glass" style="padding: 0.25rem 0.75rem; font-size: 0.8rem;" onclick="window.location.href='marketplace.html'">Browse Vendors</button>
+                    </div>
+                    <div class="flex gap-4">
+                        <div style="background: var(--bg-darker); padding: 1rem; border-radius: 0.75rem; flex: 1; border: 1px solid var(--success);">
+                            <div style="font-size: 0.8rem; color: var(--success); margin-bottom: 0.5rem;"><i class="fa-solid fa-check-circle"></i> Confirmed</div>
+                            <div style="font-weight: 600;">Grand Catering Co.</div>
+                            <div style="font-size: 0.85rem; color: var(--text-muted);">$12,500 Package</div>
+                        </div>
+                        <div style="background: var(--bg-darker); padding: 1rem; border-radius: 0.75rem; flex: 1; border: 1px solid var(--warning);">
+                            <div style="font-size: 0.8rem; color: var(--warning); margin-bottom: 0.5rem;"><i class="fa-solid fa-clock"></i> Pending Approval</div>
+                            <div style="font-weight: 600;">Visual Arts Studio</div>
+                            <div style="font-size: 0.85rem; color: var(--text-muted);">$2,000 Photography</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Col: Budget & Quick Actions -->
+            <div class="flex flex-col gap-4">
+                
+                <!-- Budget (FR012) -->
+                <div class="glass-card">
+                    <h3>Budget Overview</h3>
+                    <div style="margin: 1.5rem 0;">
+                        <div style="font-size: 2.5rem; font-weight: 700;">$45,200</div>
+                        <div style="color: var(--text-muted); font-size: 0.9rem;">of $50,000 Total Budget</div>
+                        <div class="progress-bar" style="margin-top: 0.5rem; height: 6px;">
+                            <div class="progress-fill" style="width: 90%; background: var(--warning);"></div>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 1rem;">
+                        <div class="budget-row">
+                            <span>Venue</span>
+                            <span>$15,000</span>
+                        </div>
+                        <div class="budget-row">
+                            <span>Catering</span>
+                            <span>$12,500</span>
+                        </div>
+                        <div class="budget-row">
+                            <span>Marketing</span>
+                            <span>$8,000</span>
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-glass" style="width: 100%;">Manage Budget</button>
+                </div>
+
+                <!-- Event Codes -->
+                <div class="glass-card">
+                    <h3>Guest Access</h3>
+                    <div style="margin-top: 1rem; background: white; padding: 1rem; border-radius: 0.5rem; text-align: center;">
+                        <!-- QR Placeholder -->
+                        <i class="fa-solid fa-qrcode" style="font-size: 4rem; color: black;"></i>
+                        <div style="color: black; margin-top: 0.5rem; font-weight: 700; font-family: monospace;">CODE: EVT-24-X9</div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <script>
+        function closeEvent() {
+            if(confirm("Are you sure you want to CLOSE this event? This will archive all data and disable new registrations. (UC-19)")) {
+                alert("Event Closed Successfully. Redirecting to Dashboard...");
+                window.location.href = "dashboard.html";
+            }
+        }
+    </script>
+</body>
+</html>
