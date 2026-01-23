@@ -4,412 +4,497 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Authentication | Event-Hive</title>
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .auth-container {
-            min-height: 100vh;
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+
+        :root {
+            /* Theme Colors - Solid Sophisticated Olive */
+            --bg-dark: #121A1B;
+            --bg-darker: #0d1213;
+            --primary: #A7AA63;
+            --accent: #EAE6D2;
+            --text-main: #EAE6D2;
+            --text-muted: #888870;
+            --border: #2c3536;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-dark);
             display: flex;
-            align-items: center;
             justify-content: center;
-            padding: 2rem;
-            position: relative;
+            align-items: center;
+            font-family: 'Outfit', sans-serif;
+            height: 100vh;
+            margin: 0;
             overflow: hidden;
         }
 
-        /* Animated Background Elements */
-        .orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            z-index: 0;
-            opacity: 0.4;
-        }
-        .orb-1 {
-            top: -10%;
-            left: -10%;
-            width: 500px;
-            height: 500px;
-            background: var(--primary);
-        }
-        .orb-2 {
-            bottom: -10%;
-            right: -10%;
-            width: 500px;
-            height: 500px;
-            background: var(--accent);
-        }
-
-        .auth-card {
-            width: 100%;
-            max-width: 450px;
-            background: rgba(24, 34, 35, 0.8);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-light);
-            border-radius: 1.5rem;
-            padding: 2.5rem;
+        /* Main Container for the Sliding Effect */
+        .container {
+            background-color: var(--bg-darker);
+            border-radius: 20px;
+            box-shadow: 0 14px 28px rgba(0,0,0,0.25), 
+                        0 10px 10px rgba(0,0,0,0.22);
             position: relative;
-            z-index: 10;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            width: 1000px; /* Wide container */
+            max-width: 100%;
+            min-height: 650px; /* Taller for registration fields */
+            border: 1px solid var(--border);
         }
 
-        .auth-tabs {
+        /* Inner Form Containers */
+        .form-container {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            transition: all 0.6s ease-in-out;
+            padding: 0 3rem;
             display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            border-bottom: 1px solid var(--border-light);
-            padding-bottom: 1rem;
-        }
-
-        .auth-tab {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            font-weight: 500;
-            cursor: pointer;
-            padding: 0.5rem 1rem;
-            transition: var(--transition);
-            position: relative;
-        }
-
-        .auth-tab.active {
-            color: var(--text-main);
-        }
-
-        .auth-tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: -17px; /* Align with border-bottom of container */
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--primary);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 0.8rem 1rem;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
             background: var(--bg-darker);
-            border: 1px solid var(--border-light);
-            border-radius: 0.5rem;
-            color: var(--text-main);
-            font-family: inherit;
-            transition: var(--transition);
         }
 
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(167, 170, 99, 0.1);
-        }
-
-        .role-badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 99px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            /* ... existing styles ... */
-        
-        /* New Animation Styles */
-        .form-content {
-            display: none;
+        /* Sign Up Container (Initially Hidden/Behind) */
+        .sign-up-container {
+            left: 0;
+            width: 50%;
             opacity: 0;
-            transform: translateY(10px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: 1;
         }
 
-        .form-content.active {
-            display: block; 
-            /* animation triggered via JS helper class */
+        /* Sign In Container (Initially Visible) */
+        .sign-in-container {
+            left: 0;
+            width: 50%;
+            z-index: 2;
         }
-        
-        .form-content.fade-in {
+
+        /* Active State: Sign Up moves in */
+        .container.right-panel-active .sign-in-container {
+            transform: translateX(100%);
+        }
+
+        .container.right-panel-active .sign-up-container {
+            transform: translateX(100%);
             opacity: 1;
-            transform: translateY(0);
+            z-index: 5;
+            animation: show 0.6s;
         }
 
-        /* Staggered Field Animation */
-        .form-group {
-            opacity: 0;
-            transform: translateX(-10px);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        @keyframes show {
+            0%, 49.99% {
+                opacity: 0;
+                z-index: 1;
+            }
+            50%, 100% {
+                opacity: 1;
+                z-index: 5;
+            }
         }
 
-        .form-content.active .form-group {
-            opacity: 1;
+        /* Overlay Container (The Moving Panel) */
+        .overlay-container {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 50%;
+            height: 100%;
+            overflow: hidden;
+            transition: transform 0.6s ease-in-out;
+            z-index: 100;
+        }
+
+        .container.right-panel-active .overlay-container {
+            transform: translateX(-100%);
+        }
+
+        /* The Overlay Background */
+        .overlay {
+            background: linear-gradient(135deg, var(--bg-dark), var(--primary)); /* Gradient Theme */
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: 0 0;
+            color: #FFFFFF;
+            position: relative;
+            left: -100%;
+            height: 100%;
+            width: 200%;
+            transform: translateX(0);
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .container.right-panel-active .overlay {
+            transform: translateX(50%);
+        }
+
+        /* Overlay Text Panels */
+        .overlay-panel {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0 40px;
+            text-align: center;
+            top: 0;
+            height: 100%;
+            width: 50%;
+            transform: translateX(0);
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .overlay-left {
+            transform: translateX(-20%);
+        }
+
+        .container.right-panel-active .overlay-left {
             transform: translateX(0);
         }
 
-        /* Delay loop for staggering */
-        .form-content.active .form-group:nth-child(1) { transition-delay: 0.1s; }
-        .form-content.active .form-group:nth-child(2) { transition-delay: 0.15s; }
-        .form-content.active .form-group:nth-child(3) { transition-delay: 0.2s; }
-        .form-content.active .form-group:nth-child(4) { transition-delay: 0.25s; }
-        .form-content.active .form-group:nth-child(5) { transition-delay: 0.3s; }
-        .form-content.active .form-group:nth-child(6) { transition-delay: 0.35s; }
-        .form-content.active .form-group:nth-child(7) { transition-delay: 0.4s; }
+        .overlay-right {
+            right: 0;
+            transform: translateX(0);
+        }
 
-        .btn-loading {
-            position: relative;
-            color: transparent !important;
-            pointer-events: none;
+        .container.right-panel-active .overlay-right {
+            transform: translateX(20%);
         }
-        .btn-loading::after {
-            content: '';
+
+        /* Typography & Elements */
+        h1 {
+            font-weight: 800;
+            margin: 0;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+        
+        h1 span { color: var(--primary); }
+
+        p {
+            font-size: 14px;
+            font-weight: 300;
+            line-height: 20px;
+            letter-spacing: 0.5px;
+            margin: 10px 0 30px;
+            color: var(--text-muted);
+        }
+
+        .overlay p { color: #fff; opacity: 0.9; }
+        .overlay h1 { color: #fff; }
+
+        span.text-small {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 15px;
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+
+        button {
+            border-radius: 20px;
+            border: 1px solid var(--primary);
+            background-color: var(--primary);
+            color: var(--bg-darker);
+            font-size: 12px;
+            font-weight: bold;
+            padding: 12px 45px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: transform 80ms ease-in, background 0.2s;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        button.ghost {
+            background-color: transparent;
+            border-color: #FFFFFF;
+            color: #FFFFFF;
+        }
+        
+        button.ghost:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Form Inputs */
+        form {
+            background-color: var(--bg-darker);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+        }
+
+        .input-group {
+            width: 100%;
+            margin-bottom: 0.75rem;
+            text-align: left;
+        }
+        
+        .input-group label {
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+            color: var(--text-muted);
+        }
+
+        input, select {
+            background-color: #182223;
+            border: 1px solid var(--border);
+            padding: 12px 15px;
+            margin: 4px 0;
+            width: 100%;
+            border-radius: 8px;
+            color: var(--text-main);
+            outline: none;
+            transition: 0.3s;
+        }
+        
+        input:focus, select:focus {
+            border-color: var(--primary);
+        }
+
+        /* Role Badge */
+        .role-badge {
             position: absolute;
-            left: 50%; top: 50%;
-            width: 20px; height: 20px;
-            margin: -10px 0 0 -10px;
-            border: 2px solid var(--bg-darker);
-            border-top-color: var(--text-main);
-            border-radius: 50%;
-            animation: spin 0.8s infinite linear;
+            top: 20px;
+            left: 20px;
+            background: rgba(167, 170, 99, 0.1);
+            color: var(--primary);
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            z-index: 1000;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Scrollable container for reg form if needed */
+        .scrollable-form {
+            max-height: 400px;
+            overflow-y: auto;
+            width: 100%;
+            padding-right: 5px;
+        }
+        
+        /* Custom Scrollbar */
+        .scrollable-form::-webkit-scrollbar { width: 5px; }
+        .scrollable-form::-webkit-scrollbar-track { background: var(--bg-dark); }
+        .scrollable-form::-webkit-scrollbar-thumb { background: var(--border); border-radius: 5px; }
 
     </style>
 </head>
 <body>
 
-    <div class="auth-container">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
+    <div class="container" id="container">
+        <!-- Decoration Code Badge -->
+        <div id="role-display" class="role-badge">
+            <i class="fa-solid fa-user"></i> Loading...
+        </div>
 
-        <div class="auth-card">
-            <div style="text-align: center; margin-bottom: 2rem;">
-                <div class="logo" style="margin-bottom: 1rem;">
-                    <span class="text-gradient"><i class="fa-solid fa-cube"></i> Event-Hive</span>
-                </div>
-                <!-- Role Badge -->
-                <div id="role-display" class="role-badge" style="background: rgba(167, 170, 99, 0.15); color: var(--primary);">
-                    Portal Access
-                </div>
-            </div>
+        <!-- SIGN UP CONTAINER (Left Panel Position, Hidden initially) -->
+        <div class="form-container sign-up-container">
+            <form onsubmit="handleRegister(event)">
+                <h1>Create Account</h1>
+                <p>Use your email for registration</p>
+                
+                <div class="scrollable-form">
+                    <div class="input-group">
+                        <input type="text" placeholder="Name" required />
+                    </div>
+                    <div class="input-group">
+                        <input type="email" placeholder="Email" required />
+                    </div>
+                    <div class="input-group">
+                        <input type="password" placeholder="Password" required />
+                    </div>
 
-            <div class="auth-tabs">
-                <button class="auth-tab active" onclick="switchTab('login')">Login</button>
-                <button class="auth-tab" onclick="switchTab('register')">Register</button>
-            </div>
+                    <!-- Dynamic Role Fields -->
+                    <div id="dynamic-fields-container" style="width: 100%;">
+                        <!-- Vendor -->
+                        <div id="vendor-fields" class="role-specific-fields" style="display:none; width:100%;">
+                            <div class="input-group">
+                                <select>
+                                    <option>Venue</option>
+                                    <option>Catering</option>
+                                    <option>Decor</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <input type="text" placeholder="Business Name" />
+                            </div>
+                        </div>
 
-            <!-- Login Form -->
-            <form id="login-form" class="form-content active fade-in" onsubmit="handleLogin(event)">
-                <div class="form-group">
-                    <label class="form-label">Email Address</label>
-                    <input type="email" class="form-input" placeholder="name@example.com" required>
+                         <!-- Sponsor -->
+                         <div id="sponsor-fields" class="role-specific-fields" style="display:none; width:100%;">
+                            <div class="input-group">
+                                <input type="text" placeholder="Company Name" />
+                            </div>
+                            <div class="input-group">
+                                <select>
+                                    <option selected disabled>Sponsorship Intent</option>
+                                    <option>Monetary</option>
+                                    <option>In-Kind</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Attendee -->
+                         <div id="attendee-fields" class="role-specific-fields" style="display:none; width:100%;">
+                            <div class="input-group">
+                                <input type="tel" placeholder="Phone Number" />
+                            </div>
+                        </div>
+
+                         <!-- Organizer -->
+                         <div id="organizer-fields" class="role-specific-fields" style="display:none; width:100%;">
+                            <div class="input-group">
+                                <input type="text" placeholder="Organization (Optional)" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <input type="password" class="form-input" placeholder="••••••••" required>
-                </div>
-                <div class="flex justify-between items-center form-group" style="margin-bottom: 1.5rem;">
-                    <label class="flex items-center gap-2" style="cursor: pointer;">
-                        <input type="checkbox" style="accent-color: var(--primary);">
-                        <span style="font-size: 0.85rem; color: var(--text-muted);">Remember me</span>
-                    </label>
-                    <a href="#" style="font-size: 0.85rem; color: var(--primary); text-decoration: none;">Forgot password?</a>
-                </div>
-                <button type="submit" class="btn btn-primary form-group" style="width: 100%;">Sign In</button>
+
+                <button type="submit">Sign Up</button>
             </form>
+        </div>
 
-            <!-- Register Form -->
-            <form id="register-form" class="form-content" onsubmit="handleRegister(event)">
-                <div class="grid grid-cols-2 gap-2">
-                    <div class="form-group">
-                        <label class="form-label">First Name</label>
-                        <input type="text" class="form-input" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Last Name</label>
-                        <input type="text" class="form-input" required>
-                    </div>
+        <!-- SIGN IN CONTAINER (Right Panel Position, Visible initially) -->
+        <div class="form-container sign-in-container">
+            <form onsubmit="handleLogin(event)">
+                <h1>Sign in</h1>
+                <p>Welcome back to <span>Event-Hive</span></p>
+                
+                <div class="input-group">
+                    <input type="email" placeholder="Email" required />
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Email Address</label>
-                    <input type="email" class="form-input" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <input type="password" class="form-input" required>
+                <div class="input-group">
+                    <input type="password" placeholder="Password" required />
                 </div>
                 
-                <!-- Vendor Specific Fields (FR009) -->
-                <div id="vendor-fields" class="role-specific-fields form-group" style="display: none;">
-                    <div style="margin-bottom: 1rem;">
-                        <label class="form-label">Service Type</label>
-                        <select class="form-input">
-                            <option>Venue (Community Center)</option>
-                            <option>Venue (Resort)</option>
-                            <option>Catering</option>
-                            <option>Decoration</option>
-                            <option>Photography/Videography</option>
-                            <option>Sound & Lighting</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="form-label">Business Name</label>
-                        <input type="text" class="form-input" placeholder="e.g. Elite Catering">
-                    </div>
-                </div>
-
-                <!-- Sponsor Specific Fields (FR013) -->
-                <div id="sponsor-fields" class="role-specific-fields form-group" style="display: none;">
-                    <div style="margin-bottom: 1rem;">
-                        <label class="form-label">Company Name</label>
-                        <input type="text" class="form-input" placeholder="e.g. TechCorp Inc.">
-                    </div>
-                    <div>
-                        <label class="form-label">Sponsorship Intent</label>
-                         <select class="form-input">
-                            <option>Monetary Funding</option>
-                            <option>Product / Service In-Kind</option>
-                            <option>Media Partner</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Attendee Specific Fields (FR015) -->
-                <div id="attendee-fields" class="role-specific-fields form-group" style="display: none;">
-                    <div>
-                         <label class="form-label">Phone Number</label>
-                         <input type="tel" class="form-input" placeholder="+1 (555) 000-0000">
-                    </div>
-                </div>
-
-                <!-- Organizer Specific Fields -->
-                <div id="organizer-fields" class="role-specific-fields form-group" style="display: none;">
-                    <div>
-                        <label class="form-label">Organization / Agency Name (Optional)</label>
-                        <input type="text" class="form-input">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="flex items-center gap-2" style="cursor: pointer;">
-                        <input type="checkbox" required style="accent-color: var(--primary);">
-                        <span style="font-size: 0.85rem; color: var(--text-muted);">I agree to the <a href="#" style="color: var(--primary);">Terms of Service</a></span>
-                    </label>
-                </div>
-                <button type="submit" class="btn btn-primary form-group" style="width: 100%;">Create Account</button>
-            </form>
-            
-            <div style="margin-top: 2rem; text-align: center;">
-                <a href="index.html" style="font-size: 0.9rem; color: var(--text-muted); text-decoration: none;">
+                <a href="#">Forgot your password?</a>
+                <button type="submit">Sign In</button>
+                
+                <a href="index.html" style="margin-top: 2rem; color: var(--text-muted); font-size: 0.8rem;">
                     <i class="fa-solid fa-arrow-left"></i> Change Role
                 </a>
-            </div>
+            </form>
+        </div>
 
+        <!-- OVERLAY CONTAINER (The Moving Panel) -->
+        <div class="overlay-container">
+            <div class="overlay">
+                <!-- Left Overlay (Visible when showing Sign Up) -->
+                <div class="overlay-panel overlay-left">
+                    <h1>Welcome Back!</h1>
+                    <p>To keep connected with us please login with your personal info</p>
+                    <button class="ghost" id="signIn">Sign In</button>
+                </div>
+
+                <!-- Right Overlay (Visible when showing Sign In) -->
+                <div class="overlay-panel overlay-right">
+                    <h1>Hello, Friend!</h1>
+                    <p>Enter your personal details and start your journey with us</p>
+                    <button class="ghost" id="signUp">Sign Up</button>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // ... URL Params logic ... (keep existing)
+        // Animation Logic
+        const container = document.getElementById('container');
+        const signUpBtn = document.getElementById('signUp');
+        const signInBtn = document.getElementById('signIn');
+
+        signUpBtn.addEventListener('click', () => {
+            container.classList.add("right-panel-active");
+        });
+
+        signInBtn.addEventListener('click', () => {
+            container.classList.remove("right-panel-active");
+        });
+
+        // Role & Config Logic
         const urlParams = new URLSearchParams(window.location.search);
         const role = urlParams.get('role') || 'organizer';
         const roleDisplay = document.getElementById('role-display');
 
         const roleConfig = {
-            'admin': { label: 'Administrator', color: '#ef4444', icon: 'fa-shield-halved' },
-            'organizer': { label: 'Event Organizer', color: '#3b82f6', icon: 'fa-user-tie' },
-            'vendor': { label: 'Service Vendor', color: '#10b981', icon: 'fa-store' },
-            'staff': { label: 'Event Staff', color: '#8b5cf6', icon: 'fa-users-gear' },
-            'sponsor': { label: 'Event Sponsor', color: '#f97316', icon: 'fa-handshake' },
-            'attendee': { label: 'Event Attendee', color: '#f59e0b', icon: 'fa-ticket' }
+            'admin': { label: 'ADMINISTRATOR', icon: 'fa-shield-halved' },
+            'organizer': { label: 'EVENT ORGANIZER', icon: 'fa-user-tie' },
+            'vendor': { label: 'SERVICE VENDOR', icon: 'fa-store' },
+            'staff': { label: 'EVENT STAFF', icon: 'fa-users-gear' },
+            'sponsor': { label: 'EVENT SPONSOR', icon: 'fa-handshake' },
+            'attendee': { label: 'EVENT ATTENDEE', icon: 'fa-ticket' }
         };
 
         const config = roleConfig[role] || roleConfig['organizer']; 
         roleDisplay.innerHTML = `<i class="fa-solid ${config.icon}"></i> ${config.label}`;
-        
-        // Show role specific fields
+
+        // Show specific fields
         document.querySelectorAll('.role-specific-fields').forEach(el => el.style.display = 'none');
         if (role === 'vendor') document.getElementById('vendor-fields').style.display = 'block';
         if (role === 'sponsor') document.getElementById('sponsor-fields').style.display = 'block';
         if (role === 'attendee') document.getElementById('attendee-fields').style.display = 'block';
         if (role === 'organizer') document.getElementById('organizer-fields').style.display = 'block';
 
-        /* ANIMATED TAB SWITCHING */
-        function switchTab(tab) {
-            // 1. Update Tab Buttons
-            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
-            const activeHeaderBtn = (tab === 'login') 
-                ? document.querySelector('.auth-tab:first-child') 
-                : document.querySelector('.auth-tab:last-child');
-            activeHeaderBtn.classList.add('active');
 
-            // 2. Animate Forms
-            const loginForm = document.getElementById('login-form');
-            const registerForm = document.getElementById('register-form');
-            
-            // Hide both first (reset)
-            loginForm.classList.remove('fade-in');
-            registerForm.classList.remove('fade-in');
-            
-            // Wait tiny bit for CSS transition to possibly clear, then swap display
-            setTimeout(() => {
-                if (tab === 'login') {
-                    loginForm.classList.add('active');
-                    registerForm.classList.remove('active');
-                    // Trigger reflow/animation
-                    setTimeout(() => loginForm.classList.add('fade-in'), 50);
-                } else {
-                    registerForm.classList.add('active');
-                    loginForm.classList.remove('active');
-                    setTimeout(() => registerForm.classList.add('fade-in'), 50);
-                }
-            }, 300); // Wait for outgoing fade
-        }
-
+        // Mock Login Handlers
         function handleLogin(e) {
             e.preventDefault();
             const btn = e.target.querySelector('button');
-            const originalText = btn.innerText; // Store text
+            const original = btn.innerText;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>'; 
             
-            // Add loading state
-            btn.classList.add('btn-loading');
-            btn.disabled = true;
-
             setTimeout(() => {
-                // Redirect based on role
                 if (role === 'admin') window.location.href = 'admin.html';
                 else if (role === 'vendor') window.location.href = 'vendor-dashboard.html';
                 else if (role === 'attendee') window.location.href = 'guest-view.html';
                 else if (role === 'staff') window.location.href = 'staff-dashboard.html';
                 else if (role === 'sponsor') window.location.href = 'sponsor-dashboard.html';
                 else window.location.href = 'dashboard.html';
-            }, 1500);
+            }, 1000);
         }
 
         function handleRegister(e) {
             e.preventDefault();
             const btn = e.target.querySelector('button');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
             
-            // Add loading state
-            btn.classList.add('btn-loading');
-            btn.disabled = true;
-
             setTimeout(() => {
-                alert('Registration Successful! Redirecting to login...');
-                switchTab('login');
-                
-                // Reset button
-                btn.classList.remove('btn-loading');
-                btn.disabled = false;
-            }, 2000);
+                alert("Account Created!");
+                container.classList.remove("right-panel-active"); // Slide back to login
+                btn.innerHTML = 'Sign Up';
+            }, 1500);
+        }
+
+        // Auto-switch to register if param exists
+        if(urlParams.get('action') === 'register') {
+             container.classList.add("right-panel-active");
         }
     </script>
 </body>
