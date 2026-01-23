@@ -47,9 +47,21 @@
         
         .role-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 1rem;
             margin-bottom: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .role-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .role-grid {
+                grid-template-columns: 1fr;
+            }
         }
         
         .role-card {
@@ -97,6 +109,8 @@
         .role-card.user .role-icon { color: #3b82f6; }
         .role-card.vendor .role-icon { color: #10b981; }
         .role-card.guest .role-icon { color: #f59e0b; }
+        .role-card.employee .role-icon { color: #8b5cf6; }
+        .role-card.sponsor .role-icon { color: #ec4899; }
         
         .role-title {
             font-size: 1.25rem;
@@ -206,6 +220,24 @@
                     </div>
                     <div class="role-title">Guest</div>
                     <div class="role-description">Event Attendee</div>
+                </div>
+                
+                <!-- Employee Login -->
+                <div class="role-card employee" onclick="window.location.href='auth.html?role=employee'">
+                    <div class="role-icon">
+                        <i class="fa-solid fa-id-card"></i>
+                    </div>
+                    <div class="role-title">Employee</div>
+                    <div class="role-description">Staff Member</div>
+                </div>
+                
+                <!-- Sponsor Login -->
+                <div class="role-card sponsor" onclick="window.location.href='auth.html?role=sponsor'">
+                    <div class="role-icon">
+                        <i class="fa-solid fa-handshake"></i>
+                    </div>
+                    <div class="role-title">Sponsor</div>
+                    <div class="role-description">Event Sponsor</div>
                 </div>
             </div>
             

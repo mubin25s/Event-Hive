@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Login | Event-Hive</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .login-box {
+            max-width: 500px;
+            width: 100%;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: 2rem;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.2);
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        
+        .employee-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            padding: 0.5rem 1.5rem;
+            border-radius: 99px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+        }
+        
+        .login-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #8b5cf6;
+        }
+        
+        .login-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 0.75rem;
+            background: var(--bg-darker);
+            border: 2px solid var(--border-light);
+            border-radius: 0.75rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+        
+        .tab.active {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            border-color: #8b5cf6;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+        }
+        
+        .tab:hover:not(.active) {
+            border-color: #8b5cf6;
+        }
+        
+        .form-section {
+            display: none;
+        }
+        
+        .form-section.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-main);
+            font-size: 0.95rem;
+        }
+        
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: var(--bg-darker);
+            border: 2px solid var(--border-light);
+            border-radius: 0.75rem;
+            color: var(--text-main);
+            font-size: 1rem;
+            transition: var(--transition);
+            font-family: 'Outfit', sans-serif;
+        }
+        
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+        
+        .password-wrapper {
+            position: relative;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: var(--transition);
+        }
+        
+        .password-toggle:hover {
+            color: var(--text-main);
+        }
+        
+        .btn-employee {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+        }
+        
+        .btn-employee:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5);
+        }
+        
+        .btn-employee:active {
+            transform: translateY(0);
+        }
+        
+        .back-link {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .back-link a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+        
+        .back-link a:hover {
+            color: #8b5cf6;
+        }
+        
+        .error-message, .success-message {
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            display: none;
+        }
+        
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+        
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #10b981;
+        }
+        
+        .error-message.show, .success-message.show {
+            display: block;
+            animation: slideDown 0.3s;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <div class="employee-badge">
+                    <i class="fa-solid fa-id-card"></i> EMPLOYEE PORTAL
+                </div>
+                <h1>Employee Access</h1>
+                <p>Login or apply to join our team</p>
+            </div>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('login')">
+                    <i class="fa-solid fa-right-to-bracket"></i> Login
+                </div>
+                <div class="tab" onclick="switchTab('apply')">
+                    <i class="fa-solid fa-file-circle-plus"></i> Apply
+                </div>
+            </div>
+            
+            <div class="error-message" id="errorMessage">
+                <i class="fa-solid fa-triangle-exclamation"></i> <span id="errorText"></span>
+            </div>
+            
+            <div class="success-message" id="successMessage">
+                <i class="fa-solid fa-circle-check"></i> <span id="successText"></span>
+            </div>
+            
+            <!-- Login Form -->
+            <div class="form-section active" id="loginSection">
+                <form id="employeeLoginForm" onsubmit="handleEmployeeLogin(event)">
+                    <div class="form-group">
+                        <label class="form-label" for="loginEmail">
+                            <i class="fa-solid fa-envelope"></i> Email Address
+                        </label>
+                        <input 
+                            type="email" 
+                            id="loginEmail" 
+                            class="form-input" 
+                            placeholder="Enter your email"
+                            required
+                            autocomplete="email"
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="loginPassword">
+                            <i class="fa-solid fa-key"></i> Password
+                        </label>
+                        <div class="password-wrapper">
+                            <input 
+                                type="password" 
+                                id="loginPassword" 
+                                class="form-input" 
+                                placeholder="Enter your password"
+                                required
+                                autocomplete="current-password"
+                            >
+                            <button type="button" class="password-toggle" onclick="togglePassword('loginPassword')">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn-employee">
+                        <i class="fa-solid fa-right-to-bracket"></i> Login to Dashboard
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Application Form -->
+            <div class="form-section" id="applySection">
+                <form id="employeeApplicationForm" onsubmit="handleEmployeeApplication(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="firstName">
+                                <i class="fa-solid fa-user"></i> First Name
+                            </label>
+                            <input 
+                                type="text" 
+                                id="firstName" 
+                                class="form-input" 
+                                placeholder="First name"
+                                required
+                            >
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="lastName">
+                                Last Name
+                            </label>
+                            <input 
+                                type="text" 
+                                id="lastName" 
+                                class="form-input" 
+                                placeholder="Last name"
+                                required
+                            >
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="applyEmail">
+                            <i class="fa-solid fa-envelope"></i> Email Address
+                        </label>
+                        <input 
+                            type="email" 
+                            id="applyEmail" 
+                            class="form-input" 
+                            placeholder="your.email@example.com"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="phone">
+                            <i class="fa-solid fa-phone"></i> Phone Number
+                        </label>
+                        <input 
+                            type="tel" 
+                            id="phone" 
+                            class="form-input" 
+                            placeholder="+1234567890"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="position">
+                            <i class="fa-solid fa-briefcase"></i> Position Applied For
+                        </label>
+                        <select id="position" class="form-select" required>
+                            <option value="">Select position...</option>
+                            <option value="event-coordinator">Event Coordinator</option>
+                            <option value="event-manager">Event Manager</option>
+                            <option value="logistics">Logistics Specialist</option>
+                            <option value="customer-service">Customer Service</option>
+                            <option value="technical-support">Technical Support</option>
+                            <option value="sales">Sales Representative</option>
+                            <option value="marketing">Marketing Specialist</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="experience">
+                            <i class="fa-solid fa-clock"></i> Years of Experience
+                        </label>
+                        <select id="experience" class="form-select" required>
+                            <option value="">Select experience...</option>
+                            <option value="0-1">0-1 years (Entry Level)</option>
+                            <option value="1-3">1-3 years</option>
+                            <option value="3-5">3-5 years</option>
+                            <option value="5+">5+ years</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="coverLetter">
+                            <i class="fa-solid fa-file-lines"></i> Why do you want to join our team?
+                        </label>
+                        <textarea 
+                            id="coverLetter" 
+                            class="form-textarea" 
+                            placeholder="Tell us about your experience and why you'd be a great fit..."
+                            required
+                        ></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="applyPassword">
+                            <i class="fa-solid fa-key"></i> Create Password
+                        </label>
+                        <div class="password-wrapper">
+                            <input 
+                                type="password" 
+                                id="applyPassword" 
+                                class="form-input" 
+                                placeholder="Create a strong password"
+                                required
+                                minlength="6"
+                            >
+                            <button type="button" class="password-toggle" onclick="togglePassword('applyPassword')">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn-employee">
+                        <i class="fa-solid fa-paper-plane"></i> Submit Application
+                    </button>
+                </form>
+            </div>
+            
+            <div class="back-link">
+                <a href="login.html">
+                    <i class="fa-solid fa-arrow-left"></i> Back to Role Selection
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script src="auth.js"></script>
+    <script>
+        function switchTab(tab) {
+            // Update tab active state
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.closest('.tab').classList.add('active');
+            
+            // Hide messages
+            document.getElementById('errorMessage').classList.remove('show');
+            document.getElementById('successMessage').classList.remove('show');
+            
+            // Switch sections
+            if (tab === 'login') {
+                document.getElementById('loginSection').classList.add('active');
+                document.getElementById('applySection').classList.remove('active');
+            } else {
+                document.getElementById('loginSection').classList.remove('active');
+                document.getElementById('applySection').classList.add('active');
+            }
+        }
+        
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = event.target.closest('button').querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+        
+        function showError(message) {
+            const errorMsg = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            errorText.textContent = message;
+            errorMsg.classList.add('show');
+            
+            setTimeout(() => {
+                errorMsg.classList.remove('show');
+            }, 4000);
+        }
+        
+        function showSuccess(message) {
+            const successMsg = document.getElementById('successMessage');
+            const successText = document.getElementById('successText');
+            successText.textContent = message;
+            successMsg.classList.add('show');
+        }
+        
+        function handleEmployeeLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Get registered employees from localStorage
+            const employees = JSON.parse(localStorage.getItem('employees') || '[]');
+            
+            // Find matching employee
+            const employee = employees.find(emp => 
+                emp.email.toLowerCase() === email.toLowerCase() && emp.password === password
+            );
+            
+            if (employee) {
+                // Create session
+                sessionStorage.setItem('userRole', 'employee');
+                sessionStorage.setItem('employeeEmail', employee.email);
+                sessionStorage.setItem('employeeName', `${employee.firstName} ${employee.lastName}`);
+                sessionStorage.setItem('employeePosition', employee.position);
+                sessionStorage.setItem('loginTime', new Date().toISOString());
+                
+                // Redirect to employee dashboard
+                window.location.href = 'staff-dashboard.html';
+            } else {
+                showError('Invalid email or password. Please try again.');
+            }
+        }
+        
+        function handleEmployeeApplication(event) {
+            event.preventDefault();
+            
+            const applicationData = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                email: document.getElementById('applyEmail').value,
+                phone: document.getElementById('phone').value,
+                position: document.getElementById('position').value,
+                experience: document.getElementById('experience').value,
+                coverLetter: document.getElementById('coverLetter').value,
+                password: document.getElementById('applyPassword').value,
+                applicationDate: new Date().toISOString(),
+                status: 'pending'
+            };
+            
+            // Get existing employees
+            const employees = JSON.parse(localStorage.getItem('employees') || '[]');
+            
+            // Check if email already exists
+            if (employees.some(emp => emp.email.toLowerCase() === applicationData.email.toLowerCase())) {
+                showError('An account with this email already exists.');
+                return;
+            }
+            
+            // Add new application
+            employees.push(applicationData);
+            localStorage.setItem('employees', JSON.stringify(employees));
+            
+            // Show success and auto-login
+            showSuccess('Application submitted successfully! Logging you in...');
+            
+            setTimeout(() => {
+                // Create session for new employee
+                sessionStorage.setItem('userRole', 'employee');
+                sessionStorage.setItem('employeeEmail', applicationData.email);
+                sessionStorage.setItem('employeeName', `${applicationData.firstName} ${applicationData.lastName}`);
+                sessionStorage.setItem('employeePosition', applicationData.position);
+                sessionStorage.setItem('loginTime', new Date().toISOString());
+                
+                // Redirect to dashboard
+                window.location.href = 'staff-dashboard.html';
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

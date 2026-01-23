@@ -220,16 +220,16 @@
             
             <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
                 <div class="form-group">
-                    <label class="form-label" for="adminUsername">
-                        <i class="fa-solid fa-user"></i> Username
+                    <label class="form-label" for="adminEmail">
+                        <i class="fa-solid fa-envelope"></i> Email Address
                     </label>
                     <input 
-                        type="text" 
-                        id="adminUsername" 
+                        type="email" 
+                        id="adminEmail" 
                         class="form-input" 
-                        placeholder="Enter admin username"
+                        placeholder="Enter admin email"
                         required
-                        autocomplete="username"
+                        autocomplete="email"
                     >
                 </div>
                 
@@ -252,21 +252,7 @@
                     </div>
                 </div>
                 
-                <div class="form-group">
-                    <label class="form-label" for="adminPin">
-                        <i class="fa-solid fa-shield"></i> Security PIN
-                    </label>
-                    <input 
-                        type="password" 
-                        id="adminPin" 
-                        class="form-input" 
-                        placeholder="Enter 6-digit PIN"
-                        maxlength="6"
-                        pattern="[0-9]{6}"
-                        required
-                        autocomplete="off"
-                    >
-                </div>
+
                 
                 <button type="submit" class="btn-admin">
                     <i class="fa-solid fa-right-to-bracket"></i> Login as Administrator
@@ -298,21 +284,33 @@
             }
         }
         
+        // Fixed admin credentials
+        const ADMIN_CREDENTIALS = [
+            { email: 'mubin@gmail.com', password: '1111', name: 'Mubin' },
+            { email: 'tonmoy@gmail.com', password: '2222', name: 'Tonmoy' },
+            { email: 'rohan@gmail.com', password: '3333', name: 'Rohan' }
+        ];
+        
         function handleAdminLogin(event) {
             event.preventDefault();
             
-            const username = document.getElementById('adminUsername').value;
+            const email = document.getElementById('adminEmail').value.toLowerCase();
             const password = document.getElementById('adminPassword').value;
-            const pin = document.getElementById('adminPin').value;
             
-            // Demo credentials - Replace with actual authentication
-            if (username === 'admin' && password === 'admin123' && pin === '123456') {
+            // Check credentials against fixed admin list
+            const admin = ADMIN_CREDENTIALS.find(
+                a => a.email === email && a.password === password
+            );
+            
+            if (admin) {
                 // Store session
                 sessionStorage.setItem('userRole', 'admin');
-                sessionStorage.setItem('username', username);
+                sessionStorage.setItem('adminEmail', admin.email);
+                sessionStorage.setItem('adminName', admin.name);
+                sessionStorage.setItem('loginTime', new Date().toISOString());
                 
                 // Redirect to admin dashboard
-                window.location.href = 'dashboard.html';
+                window.location.href = 'admin.html';
             } else {
                 // Show error
                 const errorMsg = document.getElementById('errorMessage');

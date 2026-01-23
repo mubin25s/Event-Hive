@@ -445,22 +445,36 @@
 
         const roleConfig = {
             'admin': { label: 'ADMINISTRATOR', icon: 'fa-shield-halved' },
-            'organizer': { label: 'EVENT ORGANIZER', icon: 'fa-user-tie' },
+            'user': { label: 'EVENT ORGANIZER', icon: 'fa-user-tie' },
             'vendor': { label: 'SERVICE VENDOR', icon: 'fa-store' },
-            'staff': { label: 'EVENT STAFF', icon: 'fa-users-gear' },
+            'employee': { label: 'STAFF EMPLOYEE', icon: 'fa-id-card' },
             'sponsor': { label: 'EVENT SPONSOR', icon: 'fa-handshake' },
-            'attendee': { label: 'EVENT ATTENDEE', icon: 'fa-ticket' }
+            'guest': { label: 'EVENT GUEST', icon: 'fa-ticket' }
         };
 
-        const config = roleConfig[role] || roleConfig['organizer']; 
+        const config = roleConfig[role] || roleConfig['user']; 
         roleDisplay.innerHTML = `<i class="fa-solid ${config.icon}"></i> ${config.label}`;
 
-        // Show specific fields
-        document.querySelectorAll('.role-specific-fields').forEach(el => el.style.display = 'none');
-        if (role === 'vendor') document.getElementById('vendor-fields').style.display = 'block';
-        if (role === 'sponsor') document.getElementById('sponsor-fields').style.display = 'block';
-        if (role === 'attendee') document.getElementById('attendee-fields').style.display = 'block';
-        if (role === 'organizer') document.getElementById('organizer-fields').style.display = 'block';
+        // Redirect to specific login pages based on role
+        // Admin, Employee, Sponsor, Guest, and Vendor have dedicated pages
+        if (role === 'admin') {
+            window.location.href = 'admin-login.html';
+        } else if (role === 'vendor') {
+            window.location.href = 'vendor-login.html';
+        } else if (role === 'employee') {
+            window.location.href = 'employee-login.html';
+        } else if (role === 'sponsor') {
+            window.location.href = 'sponsor-login.html';
+        } else if (role === 'guest') {
+            window.location.href = 'guest-login.html';
+        } else {
+            // User/Organizer uses this page
+            // Show specific fields
+            document.querySelectorAll('.role-specific-fields').forEach(el => el.style.display = 'none');
+            if (document.getElementById('organizer-fields')) {
+                document.getElementById('organizer-fields').style.display = 'block';
+            }
+        }
 
 
         // Mock Login Handlers

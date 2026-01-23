@@ -278,16 +278,16 @@
             
             <form id="vendorLoginForm" onsubmit="handleVendorLogin(event)">
                 <div class="form-group">
-                    <label class="form-label" for="vendorId">
-                        <i class="fa-solid fa-id-card"></i> Vendor ID
+                    <label class="form-label" for="vendorEmail">
+                        <i class="fa-solid fa-envelope"></i> Email Address
                     </label>
                     <input 
-                        type="text" 
-                        id="vendorId" 
+                        type="email" 
+                        id="vendorEmail" 
                         class="form-input" 
-                        placeholder="Enter your vendor ID"
+                        placeholder="Enter your email"
                         required
-                        autocomplete="username"
+                        autocomplete="email"
                     >
                 </div>
                 
@@ -326,7 +326,7 @@
             <div class="divider">OR</div>
             
             <div class="register-link">
-                New vendor? <a href="#">Register your business</a>
+                New vendor? <a href="vendor-register.html">Register your business</a>
             </div>
             
             <div class="back-link">
@@ -357,18 +357,29 @@
         function handleVendorLogin(event) {
             event.preventDefault();
             
-            const vendorId = document.getElementById('vendorId').value;
+            const email = document.getElementById('vendorEmail').value;
             const password = document.getElementById('vendorPassword').value;
             const remember = document.getElementById('rememberMe').checked;
             
-            // Demo credentials - Replace with actual authentication
-            if (vendorId === 'vendor123' && password === 'vendor123') {
+            // Get vendors from localStorage
+            const vendors = JSON.parse(localStorage.getItem('vendors') || '[]');
+            
+            // Find matching vendor
+            const vendor = vendors.find(v => 
+                v.email.toLowerCase() === email.toLowerCase() && v.password === password
+            );
+            
+            if (vendor) {
                 // Store session
                 sessionStorage.setItem('userRole', 'vendor');
-                sessionStorage.setItem('vendorId', vendorId);
+                sessionStorage.setItem('vendorId', vendor.vendorId);
+                sessionStorage.setItem('vendorEmail', vendor.email);
+                sessionStorage.setItem('vendorName', vendor.businessName);
+                sessionStorage.setItem('vendorType', vendor.vendorType);
+                sessionStorage.setItem('loginTime', new Date().toISOString());
                 
                 if (remember) {
-                    localStorage.setItem('rememberedVendorId', vendorId);
+                    localStorage.setItem('rememberedVendorEmail', email);
                 }
                 
                 // Redirect to vendor dashboard
@@ -384,11 +395,11 @@
             }
         }
         
-        // Auto-fill remembered vendor ID
+        // Auto-fill remembered vendor email
         window.addEventListener('DOMContentLoaded', () => {
-            const rememberedVendorId = localStorage.getItem('rememberedVendorId');
-            if (rememberedVendorId) {
-                document.getElementById('vendorId').value = rememberedVendorId;
+            const rememberedEmail = localStorage.getItem('rememberedVendorEmail');
+            if (rememberedEmail) {
+                document.getElementById('vendorEmail').value = rememberedEmail;
                 document.getElementById('rememberMe').checked = true;
             }
         });

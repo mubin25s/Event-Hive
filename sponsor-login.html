@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sponsor Login | Event-Hive</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .login-box {
+            max-width: 500px;
+            width: 100%;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(236, 72, 153, 0.3);
+            border-radius: 2rem;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(236, 72, 153, 0.2);
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        
+        .sponsor-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ec4899, #db2777);
+            padding: 0.5rem 1.5rem;
+            border-radius: 99px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+        }
+        
+        .login-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #ec4899;
+        }
+        
+        .login-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 0.75rem;
+            background: var(--bg-darker);
+            border: 2px solid var(--border-light);
+            border-radius: 0.75rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+        
+        .tab.active {
+            background: linear-gradient(135deg, #ec4899, #db2777);
+            border-color: #ec4899;
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+        }
+        
+        .tab:hover:not(.active) {
+            border-color: #ec4899;
+        }
+        
+        .form-section {
+            display: none;
+        }
+        
+        .form-section.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-main);
+            font-size: 0.95rem;
+        }
+        
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: var(--bg-darker);
+            border: 2px solid var(--border-light);
+            border-radius: 0.75rem;
+            color: var(--text-main);
+            font-size: 1rem;
+            transition: var(--transition);
+            font-family: 'Outfit', sans-serif;
+        }
+        
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #ec4899;
+            box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
+        }
+        
+        .password-wrapper {
+            position: relative;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: var(--transition);
+        }
+        
+        .password-toggle:hover {
+            color: var(--text-main);
+        }
+        
+        .btn-sponsor {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #ec4899, #db2777);
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4);
+        }
+        
+        .btn-sponsor:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(236, 72, 153, 0.5);
+        }
+        
+        .btn-sponsor:active {
+            transform: translateY(0);
+        }
+        
+        .back-link {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .back-link a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+        
+        .back-link a:hover {
+            color: #ec4899;
+        }
+        
+        .error-message, .success-message {
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            display: none;
+        }
+        
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+        
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #10b981;
+        }
+        
+        .error-message.show, .success-message.show {
+            display: block;
+            animation: slideDown 0.3s;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <div class="sponsor-badge">
+                    <i class="fa-solid fa-handshake"></i> SPONSOR PORTAL
+                </div>
+                <h1>Sponsor Access</h1>
+                <p>Partner with us to support amazing events</p>
+            </div>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('login')">
+                    <i class="fa-solid fa-right-to-bracket"></i> Login
+                </div>
+                <div class="tab" onclick="switchTab('register')">
+                    <i class="fa-solid fa-handshake"></i> Become a Sponsor
+                </div>
+            </div>
+            
+            <div class="error-message" id="errorMessage">
+                <i class="fa-solid fa-triangle-exclamation"></i> <span id="errorText"></span>
+            </div>
+            
+            <div class="success-message" id="successMessage">
+                <i class="fa-solid fa-circle-check"></i> <span id="successText"></span>
+            </div>
+            
+            <!-- Login Form -->
+            <div class="form-section active" id="loginSection">
+                <form id="sponsorLoginForm" onsubmit="handleSponsorLogin(event)">
+                    <div class="form-group">
+                        <label class="form-label" for="loginEmail">
+                            <i class="fa-solid fa-envelope"></i> Email Address
+                        </label>
+                        <input 
+                            type="email" 
+                            id="loginEmail" 
+                            class="form-input" 
+                            placeholder="Enter your email"
+                            required
+                            autocomplete="email"
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="loginPassword">
+                            <i class="fa-solid fa-key"></i> Password
+                        </label>
+                        <div class="password-wrapper">
+                            <input 
+                                type="password" 
+                                id="loginPassword" 
+                                class="form-input" 
+                                placeholder="Enter your password"
+                                required
+                                autocomplete="current-password"
+                            >
+                            <button type="button" class="password-toggle" onclick="togglePassword('loginPassword')">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn-sponsor">
+                        <i class="fa-solid fa-right-to-bracket"></i> Login to Dashboard
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Registration Form -->
+            <div class="form-section" id="registerSection">
+                <form id="sponsorRegistrationForm" onsubmit="handleSponsorRegistration(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="firstName">
+                                <i class="fa-solid fa-user"></i> Contact First Name
+                            </label>
+                            <input 
+                                type="text" 
+                                id="firstName" 
+                                class="form-input" 
+                                placeholder="First name"
+                                required
+                            >
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label" for="lastName">
+                                Contact Last Name
+                            </label>
+                            <input 
+                                type="text" 
+                                id="lastName" 
+                                class="form-input" 
+                                placeholder="Last name"
+                                required
+                            >
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="companyName">
+                            <i class="fa-solid fa-building"></i> Company/Organization Name
+                        </label>
+                        <input 
+                            type="text" 
+                            id="companyName" 
+                            class="form-input" 
+                            placeholder="Your company name"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="registerEmail">
+                            <i class="fa-solid fa-envelope"></i> Email Address
+                        </label>
+                        <input 
+                            type="email" 
+                            id="registerEmail" 
+                            class="form-input" 
+                            placeholder="company@example.com"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="phone">
+                            <i class="fa-solid fa-phone"></i> Phone Number
+                        </label>
+                        <input 
+                            type="tel" 
+                            id="phone" 
+                            class="form-input" 
+                            placeholder="+1234567890"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="industry">
+                            <i class="fa-solid fa-industry"></i> Industry
+                        </label>
+                        <select id="industry" class="form-select" required>
+                            <option value="">Select industry...</option>
+                            <option value="technology">Technology</option>
+                            <option value="finance">Finance & Banking</option>
+                            <option value="healthcare">Healthcare</option>
+                            <option value="retail">Retail</option>
+                            <option value="food-beverage">Food & Beverage</option>
+                            <option value="hospitality">Hospitality</option>
+                            <option value="entertainment">Entertainment</option>
+                            <option value="education">Education</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="sponsorshipLevel">
+                            <i class="fa-solid fa-star"></i> Sponsorship Interest Level
+                        </label>
+                        <select id="sponsorshipLevel" class="form-select" required>
+                            <option value="">Select level...</option>
+                            <option value="platinum">Platinum ($10,000+)</option>
+                            <option value="gold">Gold ($5,000 - $10,000)</option>
+                            <option value="silver">Silver ($2,500 - $5,000)</option>
+                            <option value="bronze">Bronze ($1,000 - $2,500)</option>
+                            <option value="custom">Custom Package</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="message">
+                            <i class="fa-solid fa-comment"></i> Tell us about your sponsorship goals
+                        </label>
+                        <textarea 
+                            id="message" 
+                            class="form-textarea" 
+                            placeholder="What type of events are you interested in sponsoring?"
+                            required
+                        ></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="registerPassword">
+                            <i class="fa-solid fa-key"></i> Create Password
+                        </label>
+                        <div class="password-wrapper">
+                            <input 
+                                type="password" 
+                                id="registerPassword" 
+                                class="form-input" 
+                                placeholder="Create a strong password"
+                                required
+                                minlength="6"
+                            >
+                            <button type="button" class="password-toggle" onclick="togglePassword('registerPassword')">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn-sponsor">
+                        <i class="fa-solid fa-handshake"></i> Register as Sponsor
+                    </button>
+                </form>
+            </div>
+            
+            <div class="back-link">
+                <a href="login.html">
+                    <i class="fa-solid fa-arrow-left"></i> Back to Role Selection
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script src="auth.js"></script>
+    <script>
+        function switchTab(tab) {
+            // Update tab active state
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.closest('.tab').classList.add('active');
+            
+            // Hide messages
+            document.getElementById('errorMessage').classList.remove('show');
+            document.getElementById('successMessage').classList.remove('show');
+            
+            // Switch sections
+            if (tab === 'login') {
+                document.getElementById('loginSection').classList.add('active');
+                document.getElementById('registerSection').classList.remove('active');
+            } else {
+                document.getElementById('loginSection').classList.remove('active');
+                document.getElementById('registerSection').classList.add('active');
+            }
+        }
+        
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = event.target.closest('button').querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+        
+        function showError(message) {
+            const errorMsg = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            errorText.textContent = message;
+            errorMsg.classList.add('show');
+            
+            setTimeout(() => {
+                errorMsg.classList.remove('show');
+            }, 4000);
+        }
+        
+        function showSuccess(message) {
+            const successMsg = document.getElementById('successMessage');
+            const successText = document.getElementById('successText');
+            successText.textContent = message;
+            successMsg.classList.add('show');
+        }
+        
+        function handleSponsorLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Get registered sponsors from localStorage
+            const sponsors = JSON.parse(localStorage.getItem('sponsors') || '[]');
+            
+            // Find matching sponsor
+            const sponsor = sponsors.find(sp => 
+                sp.email.toLowerCase() === email.toLowerCase() && sp.password === password
+            );
+            
+            if (sponsor) {
+                // Create session
+                sessionStorage.setItem('userRole', 'sponsor');
+                sessionStorage.setItem('sponsorEmail', sponsor.email);
+                sessionStorage.setItem('sponsorName', `${sponsor.firstName} ${sponsor.lastName}`);
+                sessionStorage.setItem('sponsorCompany', sponsor.companyName);
+                sessionStorage.setItem('sponsorshipLevel', sponsor.sponsorshipLevel);
+                sessionStorage.setItem('loginTime', new Date().toISOString());
+                
+                // Redirect to sponsor dashboard
+                window.location.href = 'sponsor-dashboard.html';
+            } else {
+                showError('Invalid email or password. Please try again.');
+            }
+        }
+        
+        function handleSponsorRegistration(event) {
+            event.preventDefault();
+            
+            const registrationData = {
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                companyName: document.getElementById('companyName').value,
+                email: document.getElementById('registerEmail').value,
+                phone: document.getElementById('phone').value,
+                industry: document.getElementById('industry').value,
+                sponsorshipLevel: document.getElementById('sponsorshipLevel').value,
+                message: document.getElementById('message').value,
+                password: document.getElementById('registerPassword').value,
+                registrationDate: new Date().toISOString(),
+                status: 'active'
+            };
+            
+            // Get existing sponsors
+            const sponsors = JSON.parse(localStorage.getItem('sponsors') || '[]');
+            
+            // Check if email already exists
+            if (sponsors.some(sp => sp.email.toLowerCase() === registrationData.email.toLowerCase())) {
+                showError('An account with this email already exists.');
+                return;
+            }
+            
+            // Add new sponsor
+            sponsors.push(registrationData);
+            localStorage.setItem('sponsors', JSON.stringify(sponsors));
+            
+            // Show success and auto-login
+            showSuccess('Registration successful! Logging you in...');
+            
+            setTimeout(() => {
+                // Create session for new sponsor
+                sessionStorage.setItem('userRole', 'sponsor');
+                sessionStorage.setItem('sponsorEmail', registrationData.email);
+                sessionStorage.setItem('sponsorName', `${registrationData.firstName} ${registrationData.lastName}`);
+                sessionStorage.setItem('sponsorCompany', registrationData.companyName);
+                sessionStorage.setItem('sponsorshipLevel', registrationData.sponsorshipLevel);
+                sessionStorage.setItem('loginTime', new Date().toISOString());
+                
+                // Redirect to dashboard
+                window.location.href = 'sponsor-dashboard.html';
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
